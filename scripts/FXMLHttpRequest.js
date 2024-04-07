@@ -1,6 +1,6 @@
 import { network } from './network.js';
 
-export class FXMLhttpRequest {
+export class FXMLHttpRequest {
     open(method, url, body, onready_handler) {
         this.method = method;
         this.url = url;

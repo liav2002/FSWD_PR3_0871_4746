@@ -1,4 +1,4 @@
-
+import { FXMLHttpRequest } from './FXMLHttpRequest.js';
 
 document.getElementById('showPassLog').addEventListener('change', show_passwordLog)
 document.getElementById('showPassSign').addEventListener('change', show_passwordSign)
@@ -52,4 +52,80 @@ function swap_login_form(){
         loginForm.classList.remove('hidden-block');
         loginForm.classList.add('displayed-block');
     }
+}
+
+function sign_up(event)
+{
+    var user_mail=document.getElementById("email-box").value;
+    var user_name=document.getElementById("signinUserName").value;
+    var user_pass=document.getElementById("signin-password").value;
+
+    if (user_mail === '' || user_name === '' || user_pass === ''){
+        show_error('There are fields not yet filled!')
+        return
+    }
+
+    var fxml = new FXMLHttpRequest();
+    fxml.open(
+        'PUT',
+        'localhost.com/SignUp',
+        {email: user_mail ,username : user_name, password : user_pass},
+        function(response) {
+            console.log(response)
+            if (response.status === 200){
+                var user = response.user;
+                logged_user = {
+                    email: user.email,
+                    username : user.username,
+                    password: user.password,
+                    id : user.id
+                };
+                
+                console.log('Successfuly signed in !');
+            }   
+            else{
+                show_error('Error while trying to sign up !')
+            }
+    
+        }
+    );
+    fxml.send();
+}
+
+function login(event) {
+    var user_name = document.getElementById("loginUserName").value;
+    var user_pass = document.getElementById("login-password").value;
+
+
+    if (user_name === '' || user_pass ===''){
+        show_error('Error ! Your username or password is wrong');
+        return
+    }
+    var fxml = new FXMLHttpRequest();
+    fxml.open(
+     'GET',
+     'localhost.com/SignIn',
+     {username : user_name, password : user_pass},
+     function(response) {
+        console.log(response)
+        if (response.status === 200){
+            
+            var user = response.user;
+            logged_user = {
+                email: user.email,
+                username : user.username,
+                password: user.password,
+                id : user.id
+            };
+
+            console.log('Successefuly logged in');
+        }
+        else{
+            console.log('Error while trying to log in!');
+
+        }
+
+    });
+    fxml.send();
+
 }

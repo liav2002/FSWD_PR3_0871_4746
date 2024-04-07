@@ -1,10 +1,10 @@
-import { FXMLhttpRequest } from "../FXMLHttpRequest.js";
+import { FXMLHttpRequest } from "./FXMLHttpRequest.js";
 
 export class server{
 
     static url = 'localhost.com';
 
-    static handle(FXMLhttpRequest, respond_method) {
+    static handle(FXMLHttpRequest, respond_method) {
         
         console.log("works");
         
