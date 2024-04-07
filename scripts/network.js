@@ -1,22 +1,19 @@
 import { FXMLHttpRequest } from './FXMLHttpRequest.js';
-import { server } from './server.js' 
+import { Server } from './server.js' 
 export class network {
     
     static send(FXMLHttpRequest) {
-        console.log('network: ',FXMLHttpRequest.method, FXMLHttpRequest.url);
+        console.log(FXMLHttpRequest.method, FXMLHttpRequest.url);
         if (FXMLHttpRequest.url.length < 0) {
-            console.log('network: invalid url');
+            console.log('Error in url');
             return;
         }
-        if(FXMLHttpRequest.url.split('/')[0] === 'server.com'){
-            server.handle(FXMLHttpRequest, function (response){
-                console.log('network: responding to client with ', response)
-                FXMLHttpRequest.onready_handler(response);
+        if(FXMLHttpRequest.url.split('/')[0] === 'issuesList.com'){
+            Server.handle(FXMLHttpRequest, function (response){
+                console.log(response)
+                FXMLHttpRequest.handler(response);
             })
         }
     }
-
-    
-
 
 }

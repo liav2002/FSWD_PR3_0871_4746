@@ -52,7 +52,11 @@ body {
     border: 1px solid #ddd;
     border-radius: 3px;
 }
-
+#errorAlready{
+    display:none;
+    color:red;
+    font-weight: bold;
+}
 
 .login-button{
     background-color: #3498db;
@@ -80,5 +84,7 @@ body {
     color: #1400c9;
 
 }
-
+.issues_list{
+    display: none;
+}
 

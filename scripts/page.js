@@ -7,10 +7,10 @@ document.getElementById('register-page-button').addEventListener('click', swap_r
 document.getElementById('login-page-button').addEventListener('click', swap_login_form);
 document.getElementById('signin-button').addEventListener('click', sign_up);
 
+var current_user = {email: "",username: "", password: "", id : ""}
 function show_passwordLog(){
     var showPasswordCheckbox = document.getElementById('showPassLog');
     var passwordFieldLogin = document.getElementById('login-password');
-    var passwordFieldSignIn = document.getElementById('signin-password');
     
     if (showPasswordCheckbox.checked) {
         if (passwordFieldLogin) passwordFieldLogin.type = 'text';
@@ -20,7 +20,6 @@ function show_passwordLog(){
 }
 function show_passwordSign(){
     var showPasswordCheckbox = document.getElementById('showPassSign');
-    var passwordFieldLogin = document.getElementById('login-password');
     var passwordFieldSignIn = document.getElementById('signin-password');
     if (showPasswordCheckbox.checked) {
         if (passwordFieldSignIn) passwordFieldSignIn.type = 'text';
@@ -61,20 +60,20 @@ function sign_up(event)
     var user_pass=document.getElementById("signin-password").value;
 
     if (user_mail === '' || user_name === '' || user_pass === ''){
-        show_error('There are fields not yet filled!')
+        console.log('There are fields not yet filled!')
         return
     }
 
     var fxml = new FXMLHttpRequest();
     fxml.open(
         'PUT',
-        'localhost.com/SignUp',
+        'issuesList.com/SignUp',
         {email: user_mail ,username : user_name, password : user_pass},
         function(response) {
             console.log(response)
             if (response.status === 200){
                 var user = response.user;
-                logged_user = {
+                current_user = {
                     email: user.email,
                     username : user.username,
                     password: user.password,
@@ -82,9 +81,13 @@ function sign_up(event)
                 };
                 
                 console.log('Successfuly signed in !');
+                
+                document.querySelector('.form').style.display = 'none'; 
+                document.getElementById('issues').style.display = 'block'; 
             }   
             else{
-                show_error('Error while trying to sign up !')
+                console.log('Error while trying to sign up !')
+                document.getElementById('errorAlready').style.display = 'block'; 
             }
     
         }
@@ -104,14 +107,14 @@ function login(event) {
     var fxml = new FXMLHttpRequest();
     fxml.open(
      'GET',
-     'localhost.com/SignIn',
+     'issuesList.com/Login',
      {username : user_name, password : user_pass},
      function(response) {
         console.log(response)
         if (response.status === 200){
             
             var user = response.user;
-            logged_user = {
+            current_user = {
                 email: user.email,
                 username : user.username,
                 password: user.password,
@@ -119,6 +122,9 @@ function login(event) {
             };
 
             console.log('Successefuly logged in');
+
+            document.querySelector('.form').style.display = 'none'; 
+            document.getElementById('issues').style.display = 'block'; 
         }
         else{
             console.log('Error while trying to log in!');
