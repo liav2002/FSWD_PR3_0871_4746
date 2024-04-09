@@ -1,0 +1,90 @@
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #f4f4f4;
+
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.displayed-block, .hidden-block {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #2b1e9c;
+    box-shadow: 0 0 0 8px hsl(240, 26%, 87%); 
+    width: 300px;
+    
+}
+.displayed-block{
+    display: block;
+    transition: 1s linear opacity;
+}
+.hidden-block{
+    display: none;
+}
+
+.username-label, .password-label, .email-label {
+    margin-left: 24px;
+}
+.input-text {
+    display: block; 
+    margin: 5px auto; 
+}
+.password-container {
+    display: flex;
+    align-items: center;
+}
+
+.show-password {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 77px;
+}
+
+.input-text {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+#errorAlready{
+    display:none;
+    color:red;
+    font-weight: bold;
+}
+
+.login-button{
+    background-color: #3498db;
+    color: white;
+}
+
+.input-button {
+    display: block;
+    margin: auto;
+    width: 40%;
+    padding: 10px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+#login-button, #signin-button{
+    background-color: #3498db;
+    color: white; 
+}
+#register-page-button,#login-page-button {
+    background-color: #b5d5eb; 
+    color: #1400c9;
+
+}
+.issues_list{
+    display: none;
+}
+

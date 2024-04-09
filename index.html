@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Issues list</title>
+    <link rel="stylesheet" href="styles/index.css" type="text/css">
+    <link rel="icon" href="./static/icons/icon.png">
+</head>
+
+<body>
+    <div class="form">
+        <div class="displayed-block" id="login">
+
+            <p class="username">
+                <label for="loginUserName" class="username-label">Username</label>
+                <input type="text" class="input-text" name="user-name" id="loginUserName" value="" size="20"
+                    maxlength="50">
+            </p>
+
+            <div class="password-container">
+                <label for="login-password" class="password-label">Password</label>
+                <div class="show-password">
+                    <input id="showPassLog" type="checkbox" name="show_password" value="0">
+                    <label for="show">Show Password</label>
+                </div>
+            </div>
+            <input type="password" id="login-password" class="input-text" name="pass-word" size="20" maxlength="50">
+
+            <input type="submit" id="login-button" class="input-button" value="Login">
+            <input type="button" id="register-page-button" class="input-button" value="Sign Up">
+        </div>
+        <div class="hidden-block" id="signin">
+
+            <p class="email">
+                <label for="EmailText" class="email-label">Email</label>
+                <input type="text" class="input-text" name="email-text" id="email-box" value="" size="20"
+                    maxlength="50">
+            </p>
+
+            <p class="username">
+                <label for="signinUserName" class="username-label">Username</label>
+                <input type="text" class="input-text" name="user-name" id="signinUserName" value="" size="20"
+                    maxlength="50">
+            </p>
+
+            <div class="password-container">
+                <label for="signin-password" class="password-label">Password</label>
+                <div class="show-password">
+                    <input id="showPassSign" type="checkbox" name="show_password" value="0">
+                    <label for="show">Show Password</label>
+                </div>
+            </div>
+            <input type="password" id="signin-password" class="input-text" name="pass-word" size="20" maxlength="50">
+            <label for="errorMessage" id="errorAlready">User already exists!</label>
+            <input type="submit" id="signin-button" class="input-button" value="Create account">
+            <input type="button" id="login-page-button" class="input-button" value="Login">
+        </div>
+    </div>
+
+    <div class="issues_list" id = "issues">
+
+        <h1>Issues List</h1>
+        
+    </div>
+
+    <script src="./scripts/page.js" type="module"></script>
+</body>
+
+</html>
