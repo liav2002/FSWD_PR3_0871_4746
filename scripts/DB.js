@@ -108,4 +108,20 @@ export class Database {
     static add_issue(issue) {
         // TODO: implement
     }
+
+    static change_issue_label(issue_id, new_label) {
+        Database.initialize_issues();
+    
+        for (const [id, issue] of Database.issues) {
+            if (issue.id === parseInt(issue_id)) {
+                issue.label = new_label;
+                console.log(Database.issues);
+                Database.save('issues', Object.fromEntries(Database.issues));
+                Database.issuesLoaded = false;
+                return { ...issue, id };
+            }
+        }
+    
+        return undefined;
+    }
 }

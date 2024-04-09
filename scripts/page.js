@@ -175,7 +175,6 @@ function loadIssuesBoard() {
         console.log(response)
         if (response.status === 200){
             var issueMap = response.issues;
-            console.log('Client successefuly get issues');
 
             // Clean the board by removing all issues from each column
             document.querySelectorAll('.column').forEach(column => {
@@ -186,55 +185,64 @@ function loadIssuesBoard() {
                 });
             });
 
-           // Iterate over the Map entries
-            issueMap.forEach(issue => {
-                // Create a new div for the issue
-                const issueDiv = document.createElement('div');
-                issueDiv.classList.add('issue');
-                issueDiv.draggable = true;
-                issueDiv.dataset.issueId = issue.id;
-                issueDiv.textContent = issue.title;
+            if (issueMap instanceof Map) {
+                console.log('Client successefuly get issues');
 
-                // Add event listener for clicking on the issue
-                issueDiv.addEventListener('click', issueClickHandler);
+                // Iterate over the Map entries
+                issueMap.forEach(issue => {
+                    // Create a new div for the issue
+                    const issueDiv = document.createElement('div');
+                    issueDiv.classList.add('issue');
+                    issueDiv.draggable = true;
+                    issueDiv.dataset.issueId = issue.id;
+                    issueDiv.textContent = issue.title;
 
-                // Find the appropriate column based on the issue label
-                let columnClass;
-                switch (issue.label) {
-                    case 'Todo':
-                        columnClass = '.todo';
-                        break;
-                    case 'In Process':
-                        columnClass = '.in_process';
-                        break;
-                    case 'Review':
-                        columnClass = '.review';
-                        break;
-                    case 'Bug':
-                        columnClass = '.bug';
-                        break;
-                    case 'Done':
-                        columnClass = '.done';
-                        break;
-                    default:
-                        columnClass = '.todo'; // Default to Todo if label doesn't match any column
-                }
+                    // Add event listener for clicking on the issue
+                    issueDiv.addEventListener('click', issueClickHandler);
+                    issueDiv.addEventListener('dragstart', function(event) {
+                        event.dataTransfer.setData("text", event.target.dataset.issueId);
+                    });
 
-                // Append the issue div to the appropriate column
-                document.querySelector(columnClass).appendChild(issueDiv);
-            });
+                    // Find the appropriate column based on the issue label
+                    let columnClass;
+                    switch (issue.label) {
+                        case 'Todo':
+                            columnClass = '.todo';
+                            break;
+                        case 'In Process':
+                            columnClass = '.in_process';
+                            break;
+                        case 'Review':
+                            columnClass = '.review';
+                            break;
+                        case 'Bug':
+                            columnClass = '.bug';
+                            break;
+                        case 'Done':
+                            columnClass = '.done';
+                            break;
+                        default:
+                            columnClass = '.todo'; // Default to Todo if label doesn't match any column
+                    }
 
-            // Add event listeners for drag-and-drop
-            var columns = document.querySelectorAll('.column');
-            columns.forEach(function(column) {
-                column.addEventListener('dragover', allowDrop);
-                column.addEventListener('drop', drop);
-            });
+                    // Append the issue div to the appropriate column
+                    document.querySelector(columnClass).appendChild(issueDiv);
+                });
+
+                // Add event listeners for drag-and-drop
+                var columns = document.querySelectorAll('.column');
+                columns.forEach(function(column) {
+                    column.addEventListener('dragover', allowDrop);
+                    column.addEventListener('drop', drop);
+                });
+            }
+            else {
+                console.log('Issues map is empty');
+            }
         }
         else{
             console.log('Error while trying to get issues!');
         }
-
     });
     fxml.send();
 }
@@ -331,22 +339,31 @@ function allowDrop(event) {
 // Function to handle drop event
 function drop(event) {
     event.preventDefault();
-    var data = event.dataTransfer.getData("text");
+    var issue_id = event.dataTransfer.getData("text");
     var target = event.target;
+    var new_lable = target.firstElementChild.innerText;
     if (target.classList.contains("column")) {
-        // If drop target is a column, move the dragged issue to the column
-        var newIssue = document.createElement("div");
-        newIssue.classList.add("issue");
-        newIssue.innerText = data;
-        target.appendChild(newIssue);
-        console.log("Moved issue:", data, "to", target.firstElementChild.innerText);
-        // Remove the issue from its previous column
-        var draggedIssue = document.querySelector('.issue.dragging');
-        if (draggedIssue) {
-            draggedIssue.parentNode.removeChild(draggedIssue);
-        }
-        // Call a function to handle issue change here
+        console.log("Moved issue:", issue_id, "to", new_lable);
+
+        var fxml = new FXMLHttpRequest();
+        fxml.open(
+        'PUT',
+        'issuesList.com/ChangeIssueLabel',
+        {id: issue_id, new_lable: new_lable},
+        function(response) {
+            console.log(response)
+            if (response.status === 200){
+                console.log('Successefuly tranfered');
+                loadIssuesBoard();
+            }
+            else{
+                console.log('Error while trying transfer issue');
+            }
+
+        });
+        fxml.send();
     }
 }
+
 
 onLoading();

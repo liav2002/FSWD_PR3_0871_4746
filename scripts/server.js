@@ -56,7 +56,7 @@ export class Server{
                 else{
                     console.log("issues item is missing in local storage. empty item is adding now.")
                     Database.create_empty_issues_item();
-                    callback({status: 200, issues});
+                    callback({status: 200, issues: issues});
                 }
             },
             "/GetIssue": (body, callback) => {
@@ -99,7 +99,13 @@ export class Server{
                     console.log(user);
                     callback({ status: 200, user: { email: user.email, username: user.username, password: user.password, id: user.id} });
                 }
-            }//,{"/anotherOption"... }
+            },
+            "/ChangeIssueLabel": (body, callback) => {
+                if(Database.change_issue_label(body.id, body.new_lable))
+                    callback({status: 200});
+                else
+                    callback({status: 300});
+            }
         };
 
         const action = options[resource];
