@@ -95,7 +95,14 @@ export class Database {
     }
 
     static get_issue(issue_id) {
-        // TODO: implement  
+        Database.initialize_issues();
+        for (const [id, issue] of Database.issues) {
+            if (issue.id == issue_id) {
+                return { ...issue, id };
+            }
+        }
+        return undefined;
+
     }
 
     static add_issue(issue) {

@@ -48,8 +48,7 @@ export class Server{
                 }
             },
             "/GetIssues": (body, callback) => {
-                if (Database.initialize_issues())
-                {
+                if (Database.initialize_issues()){
                     const issues = Database.issues;
                     console.log("issues retrived.")
                     callback({status: 200, issues: issues});
@@ -58,6 +57,17 @@ export class Server{
                     console.log("issues item is missing in local storage. empty item is adding now.")
                     Database.create_empty_issues_item();
                     callback({status: 200, issues});
+                }
+            },
+            "/GetIssue": (body, callback) => {
+                const issue = Database.get_issue(body.id);
+                if (issue) {
+                    console.log("Issue retrived.");
+                    callback({status: 200, issue});
+                }
+                else{
+                    console.log("Error with retriving issue.");
+                    callback({status: 404, issue: undefined});
                 }
             }
         };

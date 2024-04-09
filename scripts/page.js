@@ -255,49 +255,64 @@ function closeSlidingWindow() {
 function showIssueDetails(issueId) {
     // Fetch issue details from the server using issueId and display them
     // For now, let's assume we have some dummy data
-    var issueDetails = {
-        id: issueId,
-        name: "Sample Issue " + issueId,
-        assignee: "John Doe",
-        description: "This is a sample issue description.",
-        dueDate: "2024-04-30",
-        label: "Todo"
-    };
+    var fxml = new FXMLHttpRequest();
+    fxml.open(
+     'GET',
+     'issuesList.com/GetIssue',
+     {id: issueId},
+     function(response) {
+        console.log(response)
+        if (response.status === 200){
+            var issue = response.issue;
+            var issueDetails = {
+                id: issue.id,
+                name: issue.title,
+                assignee: issue.assignee,
+                description: issue.description,
+                dueDate: issue.dueDate,
+                label: issue.label
+            };
 
-    // Set the content of the sliding window
-    var slidingWindowContent = `
-        <div class="sliding-window-content">
-            <span class="close-btn">&times;</span>
-            <h1>${issueDetails.name}</h1>
-            <p><strong>Assign:</strong> ${issueDetails.assignee}</p>
-            <p><strong>Description:</strong> ${issueDetails.description}</p>
-            <p><strong>Due Date:</strong> ${issueDetails.dueDate}</p>
-            <p><strong>Label:</strong> ${issueDetails.label}</p>
-        </div>
-    `;
-    
-    // Create the sliding window if it doesn't exist
-    var slidingWindow = document.getElementById("sliding-window");
-    if (!slidingWindow) {
-        slidingWindow = document.createElement("div");
-        slidingWindow.id = "sliding-window";
-        slidingWindow.classList.add("sliding-window");
-        document.body.appendChild(slidingWindow);
-    }
+            // Set the content of the sliding window
+            var slidingWindowContent = `
+                <div class="sliding-window-content">
+                    <span class="close-btn">&times;</span>
+                    <h1>${issueDetails.name}</h1>
+                    <p><strong>Assign:</strong> ${issueDetails.assignee}</p>
+                    <p><strong>Description:</strong> ${issueDetails.description}</p>
+                    <p><strong>Due Date:</strong> ${issueDetails.dueDate}</p>
+                    <p><strong>Label:</strong> ${issueDetails.label}</p>
+                </div>
+            `;
 
-    // Set the content in the sliding window
-    slidingWindow.innerHTML = slidingWindowContent;
+            // Create the sliding window if it doesn't exist
+            var slidingWindow = document.getElementById("sliding-window");
+            if (!slidingWindow) {
+                slidingWindow = document.createElement("div");
+                slidingWindow.id = "sliding-window";
+                slidingWindow.classList.add("sliding-window");
+                document.body.appendChild(slidingWindow);
+            }
 
-    // Display the sliding window with slide effect
-    slidingWindow.style.width = "20%"; // Set the width to 20% of the page
-    slidingWindow.style.display = "block"; // Set the display to "block" to show the sliding window
-    setTimeout(function() {
-        slidingWindow.style.transition = "width 0.5s ease"; // Add transition for smooth slide effect
-        slidingWindow.style.transform = "translateX(0)"; // Slide in from the right
-    }, 100);
+            // Set the content in the sliding window
+            slidingWindow.innerHTML = slidingWindowContent;
 
-    // Add event listener to the close button
-    document.querySelector(".close-btn").addEventListener("click", closeSlidingWindow);
+            // Display the sliding window with slide effect
+            slidingWindow.style.width = "20%"; // Set the width to 20% of the page
+            slidingWindow.style.display = "block"; // Set the display to "block" to show the sliding window
+            setTimeout(function() {
+                slidingWindow.style.transition = "width 0.5s ease"; // Add transition for smooth slide effect
+                slidingWindow.style.transform = "translateX(0)"; // Slide in from the right
+            }, 100);
+
+            // Add event listener to the close button
+            document.querySelector(".close-btn").addEventListener("click", closeSlidingWindow);
+        }
+        else{
+            console.log('Error while trying to get Issue (id: ' + issueId + ')');
+        }
+    });
+    fxml.send();
 }
 
 function issueClickHandler(event) {

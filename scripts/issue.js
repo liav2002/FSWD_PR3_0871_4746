@@ -1,22 +1,22 @@
 export class Issue {
 
-    constructor(assign_user_id, title, label, description, due_date) {
+    constructor(assignee, title, label, description, dueDate) {
         this.id = undefined
         this.title = title
-        this.assign_user_id = assign_user_id
+        this.assignee = assignee
         this.label = label
         this.description = description
-        this.due_date = due_date
+        this.dueDate = dueDate
     };
 
     json() {
         return {
             id: this.id,
             title: this.title,
-            assign_user_id: this.assign_user_id,
+            assignee: this.assignee,
             label: this.label,
             description: this.description,
-            due_date: this.due_date
+            dueDate: this.dueDate
         }
     }
 }
