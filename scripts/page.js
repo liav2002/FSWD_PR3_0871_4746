@@ -12,6 +12,13 @@ issueTickets.forEach(function(issueTicket) {
     issueTicket.addEventListener('click', issueClickHandler);
 });
 
+// Add event listeners for drag-and-drop
+var columns = document.querySelectorAll('.column');
+columns.forEach(function(column) {
+    column.addEventListener('dragover', allowDrop);
+    column.addEventListener('drop', drop);
+});
+
 var current_user = {email: "",username: "", password: "", id : ""}
 
 function onLoading() {
@@ -168,15 +175,7 @@ function login(event) {
     fxml.send();
 }
 
-function createSlidingWindow() {
-    // Create the sliding window element
-    var slidingWindow = document.createElement("div");
-    slidingWindow.id = "sliding-window";
-    slidingWindow.classList.add("sliding-window");
-    
-    // Append the sliding window to the document body
-    document.body.appendChild(slidingWindow);
-}
+/* Liav functions for Issues Board */
 
 // Function to close the sliding window
 function closeSlidingWindow() {
@@ -246,6 +245,32 @@ function issueClickHandler(event) {
     
     // Show issue details in the sliding window
     showIssueDetails(issueId);
+}
+
+// Function to handle drag over event
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+// Function to handle drop event
+function drop(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("text");
+    var target = event.target;
+    if (target.classList.contains("column")) {
+        // If drop target is a column, move the dragged issue to the column
+        var newIssue = document.createElement("div");
+        newIssue.classList.add("issue");
+        newIssue.innerText = data;
+        target.appendChild(newIssue);
+        console.log("Moved issue:", data, "to", target.firstElementChild.innerText);
+        // Remove the issue from its previous column
+        var draggedIssue = document.querySelector('.issue.dragging');
+        if (draggedIssue) {
+            draggedIssue.parentNode.removeChild(draggedIssue);
+        }
+        // Call a function to handle issue change here
+    }
 }
 
 onLoading();

@@ -220,3 +220,7 @@ Sliding Window
 .close-btn:hover {
     color: #000;
 }
+
+.dragging {
+    opacity: 0.5;
+}
