@@ -50,4 +50,22 @@ export class Database {
         }
         return undefined;
     }
+
+    static setLoggedInUser(loggedInUser){
+        try {
+            localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        } catch (error) {
+            console.error("Error saving loggedInUser to localStorage:", error);
+        }
+    }
+
+    static getLoggedInUser() {
+        try {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            return loggedInUser ? JSON.parse(loggedInUser) : null;
+        } catch (error) {
+            console.error("Error loading loggedInUser from localStorage:", error);
+            return null;
+        }
+    }
 }

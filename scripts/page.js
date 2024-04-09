@@ -8,6 +8,33 @@ document.getElementById('login-page-button').addEventListener('click', swap_logi
 document.getElementById('signin-button').addEventListener('click', sign_up);
 
 var current_user = {email: "",username: "", password: "", id : ""}
+
+function onLoading() {
+    console.log("search for loggedIn user.")
+    var fxml = new FXMLHttpRequest();
+    fxml.open(
+     'GET',
+     'issuesList.com/isAnyoneLoggedIn',
+     {},
+     function(response) {
+        console.log(response)
+        if (response.status === 200){
+            
+            var user = response.user;
+            current_user = {
+                email: user.email,
+                username : user.username,
+                password: user.password,
+                id : user.id
+            };
+
+            document.querySelector('.form').style.display = 'none'; 
+            document.getElementById('issues').style.display = 'block'; 
+        }
+    });
+    fxml.send();
+}
+
 function show_passwordLog(){
     var showPasswordCheckbox = document.getElementById('showPassLog');
     var passwordFieldLogin = document.getElementById('login-password');
@@ -133,5 +160,6 @@ function login(event) {
 
     });
     fxml.send();
-
 }
+
+onLoading();

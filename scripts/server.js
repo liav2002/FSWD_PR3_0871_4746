@@ -31,12 +31,22 @@ export class Server{
         const options = {
             "/Login": (body, callback) => {
                 const user = Database.get_user(body.username, body.password);
+                Database.setLoggedInUser(user);
                 if (user) {
                     callback({ status: 200, user });
                 } else {
                     callback({ status: 404, user: undefined });
                 }
-            }//,{"/anotherOption"... }
+            },
+            "/isAnyoneLoggedIn": (body, callback) => {
+                const user = Database.getLoggedInUser();
+                if (user) {
+                    console.log("detect loggedIn user")
+                    callback({ status: 200, user });
+                } else {
+                    callback({ status: 404, user: undefined });
+                }
+            },
         };
 
         const action = options[resource];
