@@ -10,6 +10,7 @@ document.getElementById('signin-button').addEventListener('click', sign_up);
 var current_user = {email: "",username: "", password: "", id : ""}
 
 function onLoading() {
+    document.getElementById('issues').style.display = 'none'; 
     console.log("search for loggedIn user.")
     var fxml = new FXMLHttpRequest();
     fxml.open(
@@ -29,7 +30,7 @@ function onLoading() {
             };
 
             document.querySelector('.form').style.display = 'none'; 
-            document.getElementById('issues').style.display = 'block'; 
+            document.getElementById('issues').style.display = 'flex'; 
         }
     });
     fxml.send();
@@ -110,7 +111,7 @@ function sign_up(event)
                 console.log('Successfuly signed in !');
                 
                 document.querySelector('.form').style.display = 'none'; 
-                document.getElementById('issues').style.display = 'block'; 
+                document.getElementById('issues').style.display = 'flex'; 
             }   
             else{
                 console.log('Error while trying to sign up !')
@@ -151,7 +152,7 @@ function login(event) {
             console.log('Successefuly logged in');
 
             document.querySelector('.form').style.display = 'none'; 
-            document.getElementById('issues').style.display = 'block'; 
+            document.getElementById('issues').style.display = 'flex'; 
         }
         else{
             console.log('Error while trying to log in!');

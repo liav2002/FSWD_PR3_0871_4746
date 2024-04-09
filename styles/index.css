@@ -83,8 +83,102 @@ body {
     background-color: #b5d5eb; 
     color: #1400c9;
 
-}
-.issues_list{
+} 
+
+/* Liav CSS for Issues Board */
+.issues_list {
     display: none;
+    overflow-x: auto; /* Enable horizontal scrolling */
 }
 
+.board {
+    display: flex;
+    padding: 20px;
+}
+
+.column {
+    background-color: #f0f0f0; /* Light gray background */
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    width: 250px; /* Fixed width */
+    height: 400px; /* Fixed height */
+    margin-right: 20px; /* Add some margin between columns */
+    position: relative; /* Needed for absolute positioning of label */
+}
+
+.column h2 {
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: auto; /* Adjust width to content */
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 20px; /* Bubble shape */
+    font-size: 16px;
+    color: white;
+}
+
+.issue {
+    margin-top: 25px;
+    background-color: #fff;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.issue:hover {
+    background-color: #e0e0e0;
+}
+
+.add-issue-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Colors for different labels */
+.todo h2 {
+    /* Existing styles */
+    border-top: 3px solid #1f7ad6;
+    color: #1f7ad6;
+    border-top-left-radius: 10px; /* Adjust border-radius to fit the ellipse shape */
+    border-top-right-radius: 10px;
+}
+
+.in_process h2 {
+    /* Existing styles */
+    border-top: 3px solid #6f42c1;
+    color: #6f42c1;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.review h2 {
+    /* Existing styles */
+    border-top: 3px solid #fbc02d;
+    color: #fbc02d;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.bug h2 {
+    /* Existing styles */
+    border-top: 3px solid #d32f2f;
+    color: #d32f2f;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.done h2 {
+    /* Existing styles */
+    border-top: 3px solid #388e3c;
+    color: #388e3c;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
