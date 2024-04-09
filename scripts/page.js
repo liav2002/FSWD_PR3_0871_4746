@@ -7,6 +7,11 @@ document.getElementById('register-page-button').addEventListener('click', swap_r
 document.getElementById('login-page-button').addEventListener('click', swap_login_form);
 document.getElementById('signin-button').addEventListener('click', sign_up);
 
+var issueTickets = document.querySelectorAll('.issue');
+issueTickets.forEach(function(issueTicket) {
+    issueTicket.addEventListener('click', issueClickHandler);
+});
+
 var current_user = {email: "",username: "", password: "", id : ""}
 
 function onLoading() {
@@ -161,6 +166,86 @@ function login(event) {
 
     });
     fxml.send();
+}
+
+function createSlidingWindow() {
+    // Create the sliding window element
+    var slidingWindow = document.createElement("div");
+    slidingWindow.id = "sliding-window";
+    slidingWindow.classList.add("sliding-window");
+    
+    // Append the sliding window to the document body
+    document.body.appendChild(slidingWindow);
+}
+
+// Function to close the sliding window
+function closeSlidingWindow() {
+    var slidingWindow = document.getElementById("sliding-window");
+    if (slidingWindow) {
+        slidingWindow.style.transition = "width 0.5s ease"; // Add transition for smooth slide effect
+        slidingWindow.style.transform = "translateX(100%)"; // Slide out to the right
+        setTimeout(function() {
+            slidingWindow.style.width = "0"; // Set width to 0 to hide the sliding window
+        }, 500); // Wait for the animation to complete before hiding
+    }
+}
+
+// Function to show issue details in the sliding window
+function showIssueDetails(issueId) {
+    // Fetch issue details from the server using issueId and display them
+    // For now, let's assume we have some dummy data
+    var issueDetails = {
+        id: issueId,
+        name: "Sample Issue " + issueId,
+        assignee: "John Doe",
+        description: "This is a sample issue description.",
+        dueDate: "2024-04-30",
+        label: "Todo"
+    };
+
+    // Set the content of the sliding window
+    var slidingWindowContent = `
+        <div class="sliding-window-content">
+            <span class="close-btn">&times;</span>
+            <h1>${issueDetails.name}</h1>
+            <p><strong>Assign:</strong> ${issueDetails.assignee}</p>
+            <p><strong>Description:</strong> ${issueDetails.description}</p>
+            <p><strong>Due Date:</strong> ${issueDetails.dueDate}</p>
+            <p><strong>Label:</strong> ${issueDetails.label}</p>
+        </div>
+    `;
+    
+    // Create the sliding window if it doesn't exist
+    var slidingWindow = document.getElementById("sliding-window");
+    if (!slidingWindow) {
+        slidingWindow = document.createElement("div");
+        slidingWindow.id = "sliding-window";
+        slidingWindow.classList.add("sliding-window");
+        document.body.appendChild(slidingWindow);
+    }
+
+    // Set the content in the sliding window
+    slidingWindow.innerHTML = slidingWindowContent;
+
+    // Display the sliding window with slide effect
+    slidingWindow.style.width = "20%"; // Set the width to 20% of the page
+    slidingWindow.style.display = "block"; // Set the display to "block" to show the sliding window
+    setTimeout(function() {
+        slidingWindow.style.transition = "width 0.5s ease"; // Add transition for smooth slide effect
+        slidingWindow.style.transform = "translateX(0)"; // Slide in from the right
+    }, 100);
+
+    // Add event listener to the close button
+    document.querySelector(".close-btn").addEventListener("click", closeSlidingWindow);
+}
+
+function issueClickHandler(event) {
+    // Get the issue ID associated with the clicked issue
+    var issueId = event.target.dataset.issueId;
+    console.log(issueId);
+    
+    // Show issue details in the sliding window
+    showIssueDetails(issueId);
 }
 
 onLoading();

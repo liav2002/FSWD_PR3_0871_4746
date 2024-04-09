@@ -86,6 +86,9 @@ body {
 } 
 
 /* Liav CSS for Issues Board */
+
+/* Issues Board */
+
 .issues_list {
     display: none;
     overflow-x: auto; /* Enable horizontal scrolling */
@@ -181,4 +184,39 @@ body {
     color: #388e3c;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+}
+
+/*
+Sliding Window
+*/
+
+.sliding-window {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    background-color: #f4f4f4;
+    overflow-x: hidden;
+    transition: 0.5s;
+    z-index: 1000; /* Ensure it appears above other content */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow effect */
+}
+
+.sliding-window-content {
+    padding-top: 30px; /* Add space for close button */
+}
+
+.close-btn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close-btn:hover {
+    color: #000;
 }
