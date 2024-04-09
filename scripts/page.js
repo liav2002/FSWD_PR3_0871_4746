@@ -7,18 +7,6 @@ document.getElementById('register-page-button').addEventListener('click', swap_r
 document.getElementById('login-page-button').addEventListener('click', swap_login_form);
 document.getElementById('signin-button').addEventListener('click', sign_up);
 
-var issueTickets = document.querySelectorAll('.issue');
-issueTickets.forEach(function(issueTicket) {
-    issueTicket.addEventListener('click', issueClickHandler);
-});
-
-// Add event listeners for drag-and-drop
-var columns = document.querySelectorAll('.column');
-columns.forEach(function(column) {
-    column.addEventListener('dragover', allowDrop);
-    column.addEventListener('drop', drop);
-});
-
 var current_user = {email: "",username: "", password: "", id : ""}
 
 function onLoading() {
@@ -41,8 +29,7 @@ function onLoading() {
                 id : user.id
             };
 
-            document.querySelector('.form').style.display = 'none'; 
-            document.getElementById('issues').style.display = 'flex'; 
+            loadIssuesBoard();
         }
     });
     fxml.send();
@@ -122,8 +109,7 @@ function sign_up(event)
                 
                 console.log('Successfuly signed in !');
                 
-                document.querySelector('.form').style.display = 'none'; 
-                document.getElementById('issues').style.display = 'flex'; 
+                loadIssuesBoard();
             }   
             else{
                 console.log('Error while trying to sign up !')
@@ -163,8 +149,7 @@ function login(event) {
 
             console.log('Successefuly logged in');
 
-            document.querySelector('.form').style.display = 'none'; 
-            document.getElementById('issues').style.display = 'flex'; 
+            loadIssuesBoard();
         }
         else{
             console.log('Error while trying to log in!');
@@ -176,6 +161,83 @@ function login(event) {
 }
 
 /* Liav functions for Issues Board */
+
+function loadIssuesBoard() {
+    document.querySelector('.form').style.display = 'none'; 
+    document.getElementById('issues').style.display = 'flex'; 
+
+    var fxml = new FXMLHttpRequest();
+    fxml.open(
+     'GET',
+     'issuesList.com/GetIssues',
+     {},
+     function(response) {
+        console.log(response)
+        if (response.status === 200){
+            var issueMap = response.issues;
+            console.log('Client successefuly get issues');
+
+            // Clean the board by removing all issues from each column
+            document.querySelectorAll('.column').forEach(column => {
+                // Remove all child elements except for the add-issue button
+                const issueDivs = column.querySelectorAll('.issue');
+                issueDivs.forEach(issueDiv => {
+                    column.removeChild(issueDiv);
+                });
+            });
+
+           // Iterate over the Map entries
+            issueMap.forEach(issue => {
+                // Create a new div for the issue
+                const issueDiv = document.createElement('div');
+                issueDiv.classList.add('issue');
+                issueDiv.draggable = true;
+                issueDiv.dataset.issueId = issue.id;
+                issueDiv.textContent = issue.title;
+
+                // Add event listener for clicking on the issue
+                issueDiv.addEventListener('click', issueClickHandler);
+
+                // Find the appropriate column based on the issue label
+                let columnClass;
+                switch (issue.label) {
+                    case 'Todo':
+                        columnClass = '.todo';
+                        break;
+                    case 'In Process':
+                        columnClass = '.in_process';
+                        break;
+                    case 'Review':
+                        columnClass = '.review';
+                        break;
+                    case 'Bug':
+                        columnClass = '.bug';
+                        break;
+                    case 'Done':
+                        columnClass = '.done';
+                        break;
+                    default:
+                        columnClass = '.todo'; // Default to Todo if label doesn't match any column
+                }
+
+                // Append the issue div to the appropriate column
+                document.querySelector(columnClass).appendChild(issueDiv);
+            });
+
+            // Add event listeners for drag-and-drop
+            var columns = document.querySelectorAll('.column');
+            columns.forEach(function(column) {
+                column.addEventListener('dragover', allowDrop);
+                column.addEventListener('drop', drop);
+            });
+        }
+        else{
+            console.log('Error while trying to get issues!');
+        }
+
+    });
+    fxml.send();
+}
 
 // Function to close the sliding window
 function closeSlidingWindow() {
@@ -241,7 +303,6 @@ function showIssueDetails(issueId) {
 function issueClickHandler(event) {
     // Get the issue ID associated with the clicked issue
     var issueId = event.target.dataset.issueId;
-    console.log(issueId);
     
     // Show issue details in the sliding window
     showIssueDetails(issueId);

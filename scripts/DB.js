@@ -2,7 +2,9 @@
 export class Database {
     
     static users = new Map(); 
+    static issues = new Map ();
     static usersLoaded = false; 
+    static issuesLoaded = false;
 
     static save(key, value) {
         try {
@@ -21,7 +23,6 @@ export class Database {
             return {};
         }
     }
-
 
     static initialize_users() {
         if (!Database.usersLoaded) {
@@ -67,5 +68,37 @@ export class Database {
             console.error("Error loading loggedInUser from localStorage:", error);
             return null;
         }
+    }
+
+    static initialize_issues() {
+        if (!Database.issuesLoaded) {
+            const issues = Database.load('issues');
+            
+            if(Object.keys(issues).length === 0 && issues.constructor === Object)
+            {
+                return 0;
+            }
+
+            Object.keys(issues).forEach(key => {
+                Database.issues.set(key, issues[key]);
+            });
+            Database.issuesLoaded = true;
+
+            return 1;
+        }
+    }
+
+    static create_empty_issues_item(){
+        console.log("try to create issues item in local storage");
+        localStorage.setItem('issues', JSON.stringify({}));
+        console.log("empty issues item created in local storage");
+    }
+
+    static get_issue(issue_id) {
+        // TODO: implement  
+    }
+
+    static add_issue(issue) {
+        // TODO: implement
     }
 }

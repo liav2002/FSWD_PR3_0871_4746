@@ -47,6 +47,19 @@ export class Server{
                     callback({ status: 404, user: undefined });
                 }
             },
+            "/GetIssues": (body, callback) => {
+                if (Database.initialize_issues())
+                {
+                    const issues = Database.issues;
+                    console.log("issues retrived.")
+                    callback({status: 200, issues: issues});
+                }
+                else{
+                    console.log("issues item is missing in local storage. empty item is adding now.")
+                    Database.create_empty_issues_item();
+                    callback({status: 200, issues});
+                }
+            }
         };
 
         const action = options[resource];
