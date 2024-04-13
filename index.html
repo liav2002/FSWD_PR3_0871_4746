@@ -62,31 +62,31 @@
         <div class="board">
             <div class="column todo">
                 <h2>Todo</h2>
-                <div class="add-issue-btn">+</div>
+                <div class="add-issue-btn" data-board-id="0">+</div>
                 <div class="issue" draggable="true" data-issue-id="1">Issue 1</div>
                 <div class="issue" draggable="true" data-issue-id="2">Issue 2</div>
             </div>
             <div class="column in_process">
                 <h2>In Process</h2>
-                <div class="add-issue-btn">+</div>
+                <div class="add-issue-btn" data-board-id="1">+</div>
                 <div class="issue" draggable="true" data-issue-id="3">Issue 3</div>
                 <div class="issue" draggable="true" data-issue-id="4">Issue 4</div>
             </div>
             <div class="column review">
                 <h2>Review</h2>
-                <div class="add-issue-btn">+</div>
+                <div class="add-issue-btn" data-board-id="2">+</div>
                 <div class="issue" draggable="true" data-issue-id="5">Issue 5</div>
                 <div class="issue" draggable="true" data-issue-id="6">Issue 6</div>
             </div>
             <div class="column bug">
                 <h2>Bug</h2>
-                <div class="add-issue-btn">+</div>
+                <div class="add-issue-btn" data-board-id="3">+</div>
                 <div class="issue" draggable="true" data-issue-id="7">Issue 7</div>
                 <div class="issue" draggable="true" data-issue-id="8">Issue 8</div>
             </div>
             <div class="column done">
                 <h2>Done</h2>
-                <div class="add-issue-btn">+</div>
+                <div class="add-issue-btn" data-board-id="4">+</div>
                 <div class="issue" draggable="true" data-issue-id="9">Issue 9</div>
                 <div class="issue" draggable="true" data-issue-id="10">Issue 10</div>
             </div>
@@ -95,6 +95,29 @@
 
     <div id="sliding-window" class="sliding-window">
         <!-- Sliding window content will be inserted here -->
+    </div>
+
+    <div class="new-issue-form" id="new-issue">
+        <button id="close-issue-form" class="close-btn">&times;</button>
+        <h2>Create New Issue</h2>
+        <form id="new-issue-form-inner">
+            <label for="issue-title">Title:</label>
+            <input type="text" id="issue-title" name="issue-title" required><br>
+    
+            <label for="due-date">Due Date:</label>
+            <input type="date" id="due-date" name="due-date" required><br>
+    
+            <label for="assignee">Assignee:</label>
+            <select id="assignee" name="assignee" required>
+                <!-- Add options dynamically using JavaScript -->
+            </select><br>
+    
+            <label for="description">Description:</label><br>
+            <textarea id="description" name="description" rows="4" cols="50" required></textarea><br>
+    
+            <input type="submit" value="Submit">
+            <div id="new-issue-error-message" class="new-issue-error-message"></div>
+        </form>
     </div>
 
     <script src="./scripts/page.js" type="module"></script>
