@@ -69,6 +69,17 @@ export class Server{
                     console.log("Error with retriving issue.");
                     callback({status: 404, issue: undefined});
                 }
+            },
+            "/GetUsers": (body, callback) => {
+                const users = Database.get_usernames();
+                if(users){
+                    console.log("Users list retrived.");
+                    callback({status: 200, users});
+                }
+                else{
+                    console.log("Error with retriving issue.");
+                    callback({status: 404, users: undefined});
+                }
             }
         };
 

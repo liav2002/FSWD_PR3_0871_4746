@@ -51,6 +51,15 @@ export class Database {
         }
         return undefined;
     }
+ 
+    static get_usernames() {
+        Database.initialize_users();
+        const usernames = [];
+        for (const [, user] of Database.users) {
+            usernames.push(user.username);
+        }
+        return usernames;
+    }
 
     static setLoggedInUser(loggedInUser){
         try {

@@ -396,6 +396,35 @@ function handleAddIssueClick(event) {
             console.log("Invalid board ID");
     }
 
+    // Get users list to the select box
+    var fxml = new FXMLHttpRequest();
+    fxml.open(
+     'GET',
+     'issuesList.com/GetUsers',
+     {},
+     function(response) {
+        console.log(response)
+        if (response.status === 200){       
+            var users = response.users;
+
+            const selectElement = document.getElementById('assignee');
+
+            // Iterate over the array of usernames and create an <option> element for each username
+            users.forEach(username => {
+                // Create an <option> element
+                const option = document.createElement('option');
+                // Set the value of the option to the username
+                option.value = username;
+                // Set the text content of the option to the username
+                option.textContent = username;
+                // Append the option to the <select> element
+                selectElement.appendChild(option);
+            });
+        }
+    });
+    fxml.send();
+
+
     // Toggle visibility of the new issue form
     var newIssueForm = document.getElementById('new-issue');
     newIssueForm.style.visibility = 'visible';
