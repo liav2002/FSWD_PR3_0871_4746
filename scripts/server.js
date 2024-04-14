@@ -99,7 +99,16 @@ export class Server{
                     callback({status: 200});
                 }
                 else {
-                    console.log("Failed to add an issue.");
+                    callback({status: 303});
+                }
+            },
+            "/Logout": (body, callback) => {
+                let res = Database.logout();
+                if (res === 1) {
+                    console.log('User logged out successfully');
+                    callback({status: 200});
+                }
+                else {
                     callback({status: 303});
                 }
             }

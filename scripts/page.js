@@ -165,11 +165,15 @@ function login(event) {
 function loadIssuesBoard() {
     document.querySelector('.form').style.display = 'none'; 
     document.getElementById('issues').style.display = 'flex'; 
+    document.getElementById('logout').style.display = 'block'; 
 
     // Initialized click event to '+' button for adding new issues to the board.
     document.querySelectorAll('.add-issue-btn').forEach(function(btn) {
         btn.addEventListener('click', handleAddIssueClick);
     });
+
+    // Intialized click event to 'logout' button
+    document.getElementById("logout-btn").addEventListener("click", logoutClickHandler);
 
     // Load issues the storage in the server
     var fxml = new FXMLHttpRequest();
@@ -270,7 +274,6 @@ function loadIssuesBoard() {
     fxml.send();
 }
 
-// Function to close the sliding window
 function closeSlidingWindow() {
     var slidingWindow = document.getElementById("sliding-window");
     if (slidingWindow) {
@@ -282,7 +285,6 @@ function closeSlidingWindow() {
     }
 }
 
-// Function to show issue details in the sliding window
 function showIssueDetails(issueId) {
     // Fetch issue details from the server using issueId and display them
     // For now, let's assume we have some dummy data
@@ -354,12 +356,10 @@ function issueClickHandler(event) {
     showIssueDetails(issueId);
 }
 
-// Function to handle drag over event
 function allowDrop(event) {
     event.preventDefault();
 }
 
-// Function to handle drop event
 function drop(event) {
     event.preventDefault();
     var issue_id = event.dataTransfer.getData("text");
@@ -388,7 +388,6 @@ function drop(event) {
     }
 }
 
-// Function to add '+' button for adding new issues.
 function handleAddIssueClick(event) {
     var boardId = event.target.dataset.boardId;
     var issueLabel = "";
@@ -523,6 +522,27 @@ function removeIssue(event) {
     } else {
         console.log("User canceled removing the issue with ID:", issueId);
     }
+}
+
+function logoutClickHandler(event) {
+    var fxml = new FXMLHttpRequest();
+        fxml.open(
+        'POST',
+        'issuesList.com/Logout',
+        {},
+        function(response) {
+            console.log(response)
+            if (response.status === 200){       
+                current_user = {email: "",username: "", password: "", id : ""};
+                document.getElementById('issues').style.display = 'none'; 
+                document.getElementById('logout').style.display = 'none'; 
+                document.querySelector('.form').style.display = 'block'; 
+            }
+            else{
+                console.log('Error while trying to logout !');
+            }
+        });
+        fxml.send();
 }
 
 onLoading();

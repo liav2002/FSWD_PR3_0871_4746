@@ -165,4 +165,17 @@ export class Database {
     
         return undefined;
     }
+
+    static logout() {
+        try {
+            localStorage.removeItem('loggedInUser');
+            Database.usersLoaded = false; 
+            Database.issues.clear(); 
+            Database.issuesLoaded = false;
+            return 1; 
+        } catch (error) {
+            console.error("Error logging out:", error);
+            return 0; 
+        }
+    }
 }

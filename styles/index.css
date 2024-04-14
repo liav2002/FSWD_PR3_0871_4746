@@ -164,6 +164,28 @@ body {
     color: #333;
 }
 
+.logout-btn {
+    background-color: #f44336; 
+    color: white;
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.logout-container {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+}
+
+.logout-btn:hover {
+    background-color: #df7b7b; 
+    cursor: pointer; 
+}
+
 /* Colors for different labels */
 .todo h2 {
     /* Existing styles */
@@ -217,10 +239,11 @@ Sliding Window
     height: 100%;
     background-color: #f4f4f4;
     overflow-x: hidden;
-    transition: 0.5s;
+    transition: width 0.5s ease; ;
     z-index: 1000; /* Ensure it appears above other content */
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow effect */
+    transform: translateX(100%); /* Slide out to the right */
 }
 
 .sliding-window-content {
