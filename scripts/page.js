@@ -424,22 +424,33 @@ function handleAddIssueClick(event) {
     // Get users list to the select box
     var fxml = new FXMLHttpRequest();
     fxml.open(
-     'GET',
-     'issuesList.com/GetUsers',
-     {},
-     function(response) {
-        console.log(response)
-        if (response.status === 200){       
-            var users = response.users;
-            const selectElement = document.getElementById('assignee');
-            users.forEach(username => {
-                const option = document.createElement('option');
-                option.value = username;
-                option.textContent = username;
-                selectElement.appendChild(option);
-            });
-        }
-    });
+        'GET',
+        'issuesList.com/GetUsers',
+        {},
+        function(response) {
+            console.log(response);
+            if (response.status === 200){       
+                var users = response.users;
+                const selectElement = document.getElementById('assignee');
+
+                // Clear existing options from the select box
+                selectElement.innerHTML = '';
+
+                // Track existing usernames to prevent duplicates
+                var existingUsernames = {};
+
+                users.forEach(username => {
+                    // Check if username already exists in the select box
+                    if (!existingUsernames[username]) {
+                        const option = document.createElement('option');
+                        option.value = username;
+                        option.textContent = username;
+                        selectElement.appendChild(option);
+                        existingUsernames[username] = true; // Mark the username as existing
+                    }
+                });
+            }
+        });
     fxml.send();
 
 
