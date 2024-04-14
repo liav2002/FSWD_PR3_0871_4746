@@ -216,7 +216,7 @@ function loadIssuesBoard() {
                     issueDiv.classList.add('issue');
                     issueDiv.draggable = true;
                     issueDiv.dataset.issueId = issue.id;
-                    issueDiv.textContent = issue.title;
+                    issueDiv.textContent = "#" + issue.id + " " + issue.title + " (" + issue.assignee + ")";
 
                     // Add event listener for clicking on the issue
                     issueDiv.addEventListener('click', issueClickHandler);
@@ -317,6 +317,7 @@ function showIssueDetails(issueId) {
             var slidingWindowContent = `
                 <div class="sliding-window-content">
                     <span class="close-btn">&times;</span>
+                    <h2>#${issueDetails.id}</h2>
                     <h1>${issueDetails.name}</h1>
                     <p><strong>Assign:</strong> ${issueDetails.assignee}</p>
                     <p><strong>Description:</strong> ${issueDetails.description}</p>

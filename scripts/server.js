@@ -50,15 +50,19 @@ export class Server{
                 }
             },
             "/GetIssues": (body, callback) => {
-                if (Database.initialize_issues()){
+                let res = Database.initialize_issues();
+                if (res === 1){
                     const issues = Database.issues;
                     console.log("issues retrived.")
                     callback({status: 200, issues: issues});
                 }
-                else{
+                else if(res === 0) {
                     console.log("issues item is missing in local storage. empty item is adding now.")
                     Database.create_empty_issues_item();
                     callback({status: 200, issues: issues});
+                }
+                else {
+                    callback({status: 303, issues: undefined});
                 }
             },
             "/GetIssue": (body, callback) => {

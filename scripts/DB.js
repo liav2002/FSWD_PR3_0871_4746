@@ -1,8 +1,8 @@
 
 export class Database {
-    
     static users = new Map(); 
     static issues = new Map ();
+    static loggedInUserID = undefined;
     static usersLoaded = false; 
     static issuesLoaded = false;
 
@@ -64,6 +64,7 @@ export class Database {
     static setLoggedInUser(loggedInUser){
         try {
             localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+            Database.loggedInUserID = loggedInUser.id;
         } catch (error) {
             console.error("Error saving loggedInUser to localStorage:", error);
         }
@@ -72,7 +73,11 @@ export class Database {
     static getLoggedInUser() {
         try {
             const loggedInUser = localStorage.getItem('loggedInUser');
-            return loggedInUser ? JSON.parse(loggedInUser) : null;
+            if (!loggedInUser) {
+                return null;
+            }
+            this.loggedInUserID = (JSON.parse(loggedInUser).id);
+            return JSON.parse(loggedInUser);
         } catch (error) {
             console.error("Error loading loggedInUser from localStorage:", error);
             return null;
@@ -80,21 +85,43 @@ export class Database {
     }
 
     static initialize_issues() {
+        if (Database.loggedInUserID === undefined) {
+            return -1
+        }
+
+        if(!Database.usersLoaded) {
+            this.initialize_users();
+        }
+
         if (!Database.issuesLoaded) {
             const issues = Database.load('issues');
+            const user = Database.users.get(Database.loggedInUserID);
             
             if(Object.keys(issues).length === 0 && issues.constructor === Object)
             {
                 return 0;
             }
-
-            Object.keys(issues).forEach(key => {
-                Database.issues.set(key, issues[key]);
-            });
-            Database.issuesLoaded = true;
-
-            return 1;
+    
+            if (user && Object.keys(issues).length > 0) {
+                console.log("user.admin: " + user.admin + " type: " + typeof user.admin);
+                if (user.admin === 1) {
+                    // Return all issues if user is admin
+                    Object.keys(issues).forEach(key => {
+                        Database.issues.set(key, issues[key]);
+                    });
+                } else {
+                    // Return only the issues that belong to the user
+                    Object.keys(issues).forEach(key => {
+                        const issue = issues[key];
+                        if (issue.assignee === user.username) {
+                            Database.issues.set(key, issue);
+                        }
+                    });
+                }
+            }
         }
+
+        return 1;
     }
 
     static create_empty_issues_item(){
