@@ -2,6 +2,7 @@
 export class User {
 
     constructor(username, password, email) {
+        this.admin = 0;
         this.email = email
         this.username = username
         this.password = password
@@ -10,6 +11,7 @@ export class User {
 
     json() {
         return {
+            admin: this.admin,
             mail: this.email, 
             username: this.username,
             password: this.password,
