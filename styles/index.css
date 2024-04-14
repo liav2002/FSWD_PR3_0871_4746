@@ -150,6 +150,11 @@ body {
     cursor: pointer;
 }
 
+.trash-mark:hover {
+    background-color: #e45555; 
+    color: #ffffff; 
+}
+
 .add-issue-btn {
     position: absolute;
     top: 10px;
