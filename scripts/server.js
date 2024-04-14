@@ -1,6 +1,8 @@
 import { FXMLHttpRequest } from "./FXMLHttpRequest.js";
 import { Database } from "./DB.js";
 import { User } from "./user.js";
+import { Issue} from "./issue.js";
+
 export class Server{
 
     static url = 'issuesList.com';
@@ -88,7 +90,20 @@ export class Server{
     }
 
     static handle_POST(resource, body, callback) {
-        const options = {};
+        const options = {
+            "/AddIssue": (body, callback) => {
+                let issue = new Issue(body.assignee, body.title, body.label, body.description, body.dueDate);
+                let res = Database.add_issue(issue);
+                if (res === 1) {
+                    console.log("Issue successfully added.");
+                    callback({status: 200});
+                }
+                else {
+                    console.log("Failed to add an issue.");
+                    callback({status: 303});
+                }
+            }
+        };
 
         const action = options[resource];
         if (action) action(body, callback);

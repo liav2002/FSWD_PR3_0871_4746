@@ -115,13 +115,27 @@ export class Database {
     }
 
     static add_issue(issue) {
-        // TODO: implement
+        try {
+            Database.initialize_issues();
+            const issueId = String(Database.issues.size);
+            issue.id = parseInt(issueId);
+            Database.issues.set(issueId, issue.json());
+            Database.save('issues', Object.fromEntries(Database.issues));
+            Database.issuesLoaded = false;
+            return 1;
+        } catch (error) {
+            console.error("Error adding issue:", error);
+            return 0;
+        }
     }
 
     static change_issue_label(issue_id, new_label) {
         Database.initialize_issues();
     
         for (const [id, issue] of Database.issues) {
+            console.log("issue.id=" + issue.id + "type: " + typeof issue.id);
+            console.log("issue_id = " + issue_id + "type: " + typeof issue_id);
+            console.log("issue.id === parseInt(issue_id) is " + issue.id === parseInt(issue_id));
             if (issue.id === parseInt(issue_id)) {
                 issue.label = new_label;
                 console.log(Database.issues);

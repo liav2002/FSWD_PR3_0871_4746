@@ -376,6 +376,7 @@ function handleAddIssueClick(event) {
     var boardId = event.target.dataset.boardId;
     var issueLabel = "";
 
+    //Get specific board label
     switch (boardId) {
         case "0":
             issueLabel = "Todo";
@@ -406,18 +407,11 @@ function handleAddIssueClick(event) {
         console.log(response)
         if (response.status === 200){       
             var users = response.users;
-
             const selectElement = document.getElementById('assignee');
-
-            // Iterate over the array of usernames and create an <option> element for each username
             users.forEach(username => {
-                // Create an <option> element
                 const option = document.createElement('option');
-                // Set the value of the option to the username
                 option.value = username;
-                // Set the text content of the option to the username
                 option.textContent = username;
-                // Append the option to the <select> element
                 selectElement.appendChild(option);
             });
         }
@@ -430,10 +424,8 @@ function handleAddIssueClick(event) {
     newIssueForm.style.visibility = 'visible';
     newIssueForm.style.opacity = '1';
     
-    // Get the close button
-    var closeButton = document.getElementById('close-issue-form');
-
     // Add click event listener to close the form
+    var closeButton = document.getElementById('close-issue-form');
     closeButton.addEventListener('click', function() {
         var newIssueForm = document.getElementById('new-issue');
         newIssueForm.style.visibility = 'hidden';
@@ -443,6 +435,7 @@ function handleAddIssueClick(event) {
     // handle submit button
     var submitButton = document.querySelector('#new-issue-form-inner input[type="submit"]');
     var errorMessage = document.getElementById('new-issue-error-message');
+    errorMessage.style.display = 'none'; 
 
     submitButton.addEventListener('click', function(event) {
         // Prevent form submission
@@ -450,18 +443,41 @@ function handleAddIssueClick(event) {
     
         // Validate form fields (example validation)
         var issueTitle = document.getElementById('issue-title').value.trim();
-        var dueDate = document.getElementById('due-date').value.trim();
-        var assignee = document.getElementById('assignee').value.trim();
-        var description = document.getElementById('description').value.trim();
+        var issueDueDate = document.getElementById('due-date').value.trim();
+        var userAssignee = document.getElementById('assignee').value.trim();
+        var issueDescription = document.getElementById('description').value.trim();
     
         // Check if any field is empty
-        if (issueTitle === '' || dueDate === '' || assignee === '' || description === '') {
+        if (issueTitle === '' || issueDueDate === '' || userAssignee === '' || issueDescription === '') {
             errorMessage.textContent = 'All fields are required!';
-            errorMessage.style.display = 'block'; // Show error message
+            errorMessage.style.display = 'block'; 
         } else {
-            // If all fields are filled, submit the form (or perform other actions)
-            errorMessage.style.display = 'none'; // Hide error message
-            // Perform form submission or other actions...
+            errorMessage.style.display = 'none'; 
+            var fxml = new FXMLHttpRequest();
+            fxml.open(
+                'POST',
+                'issuesList.com/AddIssue',
+                {assignee: userAssignee, title: issueTitle, label: issueLabel, description: issueDescription, dueDate: issueDueDate},
+                function(response) {
+                    console.log(response)
+                    if (response.status === 200){ 
+                        loadIssuesBoard();
+                    }   
+                    else{
+                        console.log('Error while trying to add issue !');
+                    }
+                }
+            );
+            fxml.send();
+
+            // close and reset form
+            var newIssueForm = document.getElementById('new-issue');
+            newIssueForm.style.visibility = 'hidden';
+            newIssueForm.style.opacity = '0';
+            document.getElementById('issue-title').value = '';
+            document.getElementById('due-date').value = '';
+            document.getElementById('assignee').value = '';
+            document.getElementById('description').value = '';
         }
     });
 }
