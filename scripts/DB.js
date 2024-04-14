@@ -55,9 +55,19 @@ export class Database {
     static get_usernames() {
         Database.initialize_users();
         const usernames = [];
-        for (const [, user] of Database.users) {
-            usernames.push(user.username);
+
+        const current_user = Database.users.get(Database.loggedInUserID);
+
+        if (current_user.admin === 1){
+            for (const [, user] of Database.users) {
+                usernames.push(user.username);
+            }
         }
+
+        else {
+            usernames.push(current_user.username);
+        }
+        
         return usernames;
     }
 
@@ -117,17 +127,13 @@ export class Database {
         }
 
         const user = Database.users.get(Database.loggedInUserID);
-        console.log(user);
         const filteredIssues = new Map();
 
         if (user.admin === 1) {
-            console.log("Im here");
             // Return all issues if user is admin
             Database.issues.forEach((value, key) => {
                 filteredIssues.set(key, value);
             });
-            console.log(Database.issues);
-            console.log(filteredIssues);
         } else {
             // Return only the issues that belong to the user
             Database.issues.forEach((issue, key) => {
