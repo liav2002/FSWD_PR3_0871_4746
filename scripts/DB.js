@@ -1,8 +1,10 @@
 
 export class Database {
-    
     static users = new Map(); 
+    static issues = new Map ();
+    static loggedInUserID = undefined;
     static usersLoaded = false; 
+    static issuesLoaded = false;
 
     static save(key, value) {
         try {
@@ -21,7 +23,6 @@ export class Database {
             return {};
         }
     }
-
 
     static initialize_users() {
         if (!Database.usersLoaded) {
@@ -50,10 +51,30 @@ export class Database {
         }
         return undefined;
     }
+ 
+    static get_usernames() {
+        Database.initialize_users();
+        const usernames = [];
+
+        const current_user = Database.users.get(Database.loggedInUserID);
+
+        if (current_user.admin === 1){
+            for (const [, user] of Database.users) {
+                usernames.push(user.username);
+            }
+        }
+
+        else {
+            usernames.push(current_user.username);
+        }
+        
+        return usernames;
+    }
 
     static setLoggedInUser(loggedInUser){
         try {
             localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+            Database.loggedInUserID = loggedInUser.id;
         } catch (error) {
             console.error("Error saving loggedInUser to localStorage:", error);
         }
@@ -62,10 +83,148 @@ export class Database {
     static getLoggedInUser() {
         try {
             const loggedInUser = localStorage.getItem('loggedInUser');
-            return loggedInUser ? JSON.parse(loggedInUser) : null;
+            if (!loggedInUser) {
+                return null;
+            }
+            this.loggedInUserID = (JSON.parse(loggedInUser).id);
+            return JSON.parse(loggedInUser);
         } catch (error) {
             console.error("Error loading loggedInUser from localStorage:", error);
             return null;
+        }
+    }
+
+    static initialize_issues() {
+        if (Database.loggedInUserID === undefined) {
+            return -1
+        }
+
+        if(!Database.usersLoaded) {
+            this.initialize_users();
+        }
+
+        if (!Database.issuesLoaded) {
+            const issues = Database.load('issues');
+            
+            if(Object.keys(issues).length === 0 && issues.constructor === Object)
+            {
+                return 0;
+            }
+    
+            Object.keys(issues).forEach(key => {
+                Database.issues.set(key, issues[key]);
+            });
+        }
+
+        return 1;
+    }
+
+    static get_issues() {
+        let res = Database.initialize_issues();
+        
+        if (res === 0 || res === -1) {
+            return res;
+        }
+
+        const user = Database.users.get(Database.loggedInUserID);
+        const filteredIssues = new Map();
+
+        if (user.admin === 1) {
+            // Return all issues if user is admin
+            Database.issues.forEach((value, key) => {
+                filteredIssues.set(key, value);
+            });
+        } else {
+            // Return only the issues that belong to the user
+            Database.issues.forEach((issue, key) => {
+                if (issue.assignee === user.username) {
+                    filteredIssues.set(key, issue);
+                }
+            });
+        }
+
+        return filteredIssues;
+    }
+
+    static create_empty_issues_item(){
+        console.log("try to create issues item in local storage");
+        localStorage.setItem('issues', JSON.stringify({}));
+        console.log("empty issues item created in local storage");
+    }
+
+    static get_issue(issue_id) {
+        Database.initialize_issues();
+        for (const [id, issue] of Database.issues) {
+            if (issue.id == issue_id) {
+                return { ...issue, id };
+            }
+        }
+        return undefined;
+
+    }
+
+    static add_issue(issue) {
+        try {
+            Database.initialize_issues();
+            const issueId = String(Database.issues.size);
+            issue.id = parseInt(issueId);
+            Database.issues.set(issueId, issue.json());
+            Database.save('issues', Object.fromEntries(Database.issues));
+            Database.issuesLoaded = false;
+            return 1;
+        } catch (error) {
+            console.error("Error adding issue:", error);
+            return 0;
+        }
+    }
+
+    static remove_issue(issue_id) {
+        try {
+            Database.initialize_issues();
+            for (const [id, issue] of Database.issues) {
+                if (issue.id === parseInt(issue_id)) {
+                    Database.issues.delete(id);
+                    Database.save('issues', Object.fromEntries(Database.issues));
+                    Database.issuesLoaded = false;
+                    return 1; // Issue removed successfully
+                }
+            }
+            return 0; // Issue not found
+        } catch (error) {
+            console.error("Error removing issue:", error);
+            return -1; // Error occurred while removing issue
+        }
+    }
+
+    static change_issue_label(issue_id, new_label) {
+        Database.initialize_issues();
+    
+        for (const [id, issue] of Database.issues) {
+            console.log("issue.id=" + issue.id + "type: " + typeof issue.id);
+            console.log("issue_id = " + issue_id + "type: " + typeof issue_id);
+            console.log("issue.id === parseInt(issue_id) is " + issue.id === parseInt(issue_id));
+            if (issue.id === parseInt(issue_id)) {
+                issue.label = new_label;
+                console.log(Database.issues);
+                Database.save('issues', Object.fromEntries(Database.issues));
+                Database.issuesLoaded = false;
+                return { ...issue, id };
+            }
+        }
+    
+        return undefined;
+    }
+
+    static logout() {
+        try {
+            localStorage.removeItem('loggedInUser');
+            Database.issues.clear(); 
+            Database.issuesLoaded = false;
+            Database.loggedInUserID = undefined;
+            return 1; 
+        } catch (error) {
+            console.error("Error logging out:", error);
+            return 0; 
         }
     }
 }
