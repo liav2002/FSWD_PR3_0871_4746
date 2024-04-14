@@ -184,10 +184,10 @@ function loadIssuesBoard() {
 
             // Clean the board by removing all issues from each column
             document.querySelectorAll('.column').forEach(column => {
-                // Remove all child elements except for the add-issue button
-                const issueDivs = column.querySelectorAll('.issue');
-                issueDivs.forEach(issueDiv => {
-                    column.removeChild(issueDiv);
+                // Remove all issue containers
+                const issueContainers = column.querySelectorAll('.issue-container');
+                issueContainers.forEach(issueContainer => {
+                    column.removeChild(issueContainer);
                 });
             });
 
@@ -196,6 +196,10 @@ function loadIssuesBoard() {
 
                 // Iterate over the Map entries
                 issueMap.forEach(issue => {
+                    // Create a new container div for the issue
+                    const issueContainer = document.createElement('div');
+                    issueContainer.classList.add('issue-container');
+
                     // Create a new div for the issue
                     const issueDiv = document.createElement('div');
                     issueDiv.classList.add('issue');
@@ -208,6 +212,19 @@ function loadIssuesBoard() {
                     issueDiv.addEventListener('dragstart', function(event) {
                         event.dataTransfer.setData("text", event.target.dataset.issueId);
                     });
+
+                    // Create a trash mark
+                    const trashMark = document.createElement('div');
+                    trashMark.classList.add('trash-mark');
+                    trashMark.innerHTML = '&#128465;'; // Unicode for trash can emoji
+                    trashMark.addEventListener('click', function(event) {
+                        // Call the removeIssue function when the trash mark is clicked
+                        removeIssue(event);
+                    });
+
+                    // Append the issue div and trash mark to the issue container
+                    issueContainer.appendChild(issueDiv);
+                    issueContainer.appendChild(trashMark);
 
                     // Find the appropriate column based on the issue label
                     let columnClass;
@@ -232,7 +249,7 @@ function loadIssuesBoard() {
                     }
 
                     // Append the issue div to the appropriate column
-                    document.querySelector(columnClass).appendChild(issueDiv);
+                    document.querySelector(columnClass).appendChild(issueContainer);
                 });
 
                 // Add event listeners for drag-and-drop
@@ -480,6 +497,17 @@ function handleAddIssueClick(event) {
             document.getElementById('description').value = '';
         }
     });
+}
+
+function removeIssue(event) {
+    const confirmed = confirm("Are you sure you want to remove this issue?");
+
+    if (confirmed) {
+        console.log("User confirmed to remove the issue");
+        // Implement your logic to remove the issue here
+    } else {
+        console.log("User canceled removing the issue");
+    }
 }
 
 onLoading();

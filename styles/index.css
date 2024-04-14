@@ -145,6 +145,14 @@ body {
     color: #333;
 }
 
+.trash-mark {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 16px;
+    color: #ff0000; /* Red color */
+    cursor: pointer;
+}
+
 /* Colors for different labels */
 .todo h2 {
     /* Existing styles */
