@@ -51,10 +51,8 @@ export class Server{
             },
             "/GetIssues": (body, callback) => {
                 let res = Database.initialize_issues();
-                if (res === 1){
-                    const issues = Database.issues;
-                    console.log("issues retrived.")
-                    callback({status: 200, issues: issues});
+                if (res === -1){
+                    callback({status: 303, issues: undefined});
                 }
                 else if(res === 0) {
                     console.log("issues item is missing in local storage. empty item is adding now.")
@@ -62,7 +60,9 @@ export class Server{
                     callback({status: 200, issues: issues});
                 }
                 else {
-                    callback({status: 303, issues: undefined});
+                    const issues = Database.get_issues();
+                    console.log("issues retrived.")
+                    callback({status: 200, issues: issues});
                 }
             },
             "/GetIssue": (body, callback) => {

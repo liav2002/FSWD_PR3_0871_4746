@@ -95,33 +95,49 @@ export class Database {
 
         if (!Database.issuesLoaded) {
             const issues = Database.load('issues');
-            const user = Database.users.get(Database.loggedInUserID);
             
             if(Object.keys(issues).length === 0 && issues.constructor === Object)
             {
                 return 0;
             }
     
-            if (user && Object.keys(issues).length > 0) {
-                console.log("user.admin: " + user.admin + " type: " + typeof user.admin);
-                if (user.admin === 1) {
-                    // Return all issues if user is admin
-                    Object.keys(issues).forEach(key => {
-                        Database.issues.set(key, issues[key]);
-                    });
-                } else {
-                    // Return only the issues that belong to the user
-                    Object.keys(issues).forEach(key => {
-                        const issue = issues[key];
-                        if (issue.assignee === user.username) {
-                            Database.issues.set(key, issue);
-                        }
-                    });
-                }
-            }
+            Object.keys(issues).forEach(key => {
+                Database.issues.set(key, issues[key]);
+            });
         }
 
         return 1;
+    }
+
+    static get_issues() {
+        let res = Database.initialize_issues();
+        
+        if (res === 0 || res === -1) {
+            return res;
+        }
+
+        const user = Database.users.get(Database.loggedInUserID);
+        console.log(user);
+        const filteredIssues = new Map();
+
+        if (user.admin === 1) {
+            console.log("Im here");
+            // Return all issues if user is admin
+            Database.issues.forEach((value, key) => {
+                filteredIssues.set(key, value);
+            });
+            console.log(Database.issues);
+            console.log(filteredIssues);
+        } else {
+            // Return only the issues that belong to the user
+            Database.issues.forEach((issue, key) => {
+                if (issue.assignee === user.username) {
+                    filteredIssues.set(key, issue);
+                }
+            });
+        }
+
+        return filteredIssues;
     }
 
     static create_empty_issues_item(){
@@ -196,9 +212,9 @@ export class Database {
     static logout() {
         try {
             localStorage.removeItem('loggedInUser');
-            Database.usersLoaded = false; 
             Database.issues.clear(); 
             Database.issuesLoaded = false;
+            Database.loggedInUserID = undefined;
             return 1; 
         } catch (error) {
             console.error("Error logging out:", error);
