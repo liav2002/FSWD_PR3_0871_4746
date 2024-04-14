@@ -505,7 +505,21 @@ function removeIssue(event) {
 
     if (confirmed) {
         console.log("User confirmed to remove the issue with ID:", issueId);
-        // Implement your logic to remove the issue here
+        var fxml = new FXMLHttpRequest();
+        fxml.open(
+        'DELETE',
+        'issuesList.com/DeleteIssue',
+        {id: issueId},
+        function(response) {
+            console.log(response)
+            if (response.status === 200){       
+                loadIssuesBoard();
+            }
+            else{
+                console.log('Error while trying to remove issue !');
+            }
+        });
+        fxml.send();
     } else {
         console.log("User canceled removing the issue with ID:", issueId);
     }

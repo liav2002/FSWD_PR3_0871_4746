@@ -139,7 +139,19 @@ export class Server{
     }
 
     static handle_DELETE(resource, body, callback) {
-        const options = {};
+        const options = {
+            "/DeleteIssue": (body, callback) => {
+                let res = Database.remove_issue(body.id);
+                if (res === 1) {
+                    console.log("Issue successfully removed.");
+                    callback({status: 200});
+                }
+                else {
+                    console.log("Failed to remove the issue.");
+                    callback({status: 303});
+                }
+            }
+        };
 
         const action = options[resource];
         if (action) action(body, callback);

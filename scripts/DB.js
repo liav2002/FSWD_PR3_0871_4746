@@ -129,6 +129,24 @@ export class Database {
         }
     }
 
+    static remove_issue(issue_id) {
+        try {
+            Database.initialize_issues();
+            for (const [id, issue] of Database.issues) {
+                if (issue.id === parseInt(issue_id)) {
+                    Database.issues.delete(id);
+                    Database.save('issues', Object.fromEntries(Database.issues));
+                    Database.issuesLoaded = false;
+                    return 1; // Issue removed successfully
+                }
+            }
+            return 0; // Issue not found
+        } catch (error) {
+            console.error("Error removing issue:", error);
+            return -1; // Error occurred while removing issue
+        }
+    }
+
     static change_issue_label(issue_id, new_label) {
         Database.initialize_issues();
     
