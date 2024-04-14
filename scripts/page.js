@@ -501,12 +501,13 @@ function handleAddIssueClick(event) {
 
 function removeIssue(event) {
     const confirmed = confirm("Are you sure you want to remove this issue?");
+    const issueId = event.target.parentElement.querySelector('.issue').dataset.issueId;
 
     if (confirmed) {
-        console.log("User confirmed to remove the issue");
+        console.log("User confirmed to remove the issue with ID:", issueId);
         // Implement your logic to remove the issue here
     } else {
-        console.log("User canceled removing the issue");
+        console.log("User canceled removing the issue with ID:", issueId);
     }
 }
 

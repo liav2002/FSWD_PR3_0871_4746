@@ -136,6 +136,20 @@ body {
     background-color: #e0e0e0;
 }
 
+.issue-container {
+    position: relative;
+}
+
+.trash-mark {
+    font-size: 20px; 
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 2px;
+    color: red; 
+    cursor: pointer;
+}
+
 .add-issue-btn {
     position: absolute;
     top: 10px;
@@ -143,14 +157,6 @@ body {
     font-size: 20px;
     cursor: pointer;
     color: #333;
-}
-
-.trash-mark {
-    display: inline-block;
-    margin-left: 5px;
-    font-size: 16px;
-    color: #ff0000; /* Red color */
-    cursor: pointer;
 }
 
 /* Colors for different labels */
