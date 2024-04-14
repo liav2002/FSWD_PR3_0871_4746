@@ -109,6 +109,10 @@ function sign_up(event)
                 
                 console.log('Successfuly signed in !');
                 
+                document.getElementById("email-box").value = "";
+                document.getElementById("signinUserName").value = "";
+                document.getElementById("signin-password").value = "";
+
                 loadIssuesBoard();
             }   
             else{
@@ -148,6 +152,9 @@ function login(event) {
             };
 
             console.log('Successefuly logged in');
+
+            document.getElementById("loginUserName").value = "";
+            document.getElementById("login-password").value = "";
 
             loadIssuesBoard();
         }
@@ -537,6 +544,7 @@ function logoutClickHandler(event) {
                 document.getElementById('issues').style.display = 'none'; 
                 document.getElementById('logout').style.display = 'none'; 
                 document.querySelector('.form').style.display = 'block'; 
+                swap_login_form();
             }
             else{
                 console.log('Error while trying to logout !');
