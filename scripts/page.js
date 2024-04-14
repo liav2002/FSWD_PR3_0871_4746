@@ -8,7 +8,7 @@ document.getElementById('login-page-button').addEventListener('click', swap_logi
 document.getElementById('signin-button').addEventListener('click', sign_up);
 
 var current_user = {email: "",username: "", password: "", id : ""}
-
+//#region Login/Signin
 function onLoading() {
     document.getElementById('issues').style.display = 'none'; 
     console.log("search for loggedIn user.")
@@ -87,7 +87,8 @@ function sign_up(event)
     var user_pass=document.getElementById("signin-password").value;
 
     if (user_mail === '' || user_name === '' || user_pass === ''){
-        console.log('There are fields not yet filled!')
+        document.getElementById('errorAlready').innerText= 'There are fields not yet filled!';
+        document.getElementById('errorAlready').style.display = 'block'; 
         return
     }
 
@@ -116,13 +117,16 @@ function sign_up(event)
                 loadIssuesBoard();
             }   
             else{
-                console.log('Error while trying to sign up !')
+                document.getElementById('errorAlready').innerText= 'User already exist!';
                 document.getElementById('errorAlready').style.display = 'block'; 
             }
     
         }
     );
+    document.getElementById('errorAlready').style.display = 'none'; 
+    document.getElementById('errorNotExist').style.display = 'none'; 
     fxml.send();
+
 }
 
 function login(event) {
@@ -131,7 +135,7 @@ function login(event) {
 
 
     if (user_name === '' || user_pass ===''){
-        show_error('Error ! Your username or password is wrong');
+        document.getElementById('errorNotExist').style.display = 'block'; 
         return
     }
     var fxml = new FXMLHttpRequest();
@@ -159,30 +163,52 @@ function login(event) {
             loadIssuesBoard();
         }
         else{
-            console.log('Error while trying to log in!');
-
+            document.getElementById('errorNotExist').style.display = 'block'; 
         }
 
     });
+    document.getElementById('errorAlready').style.display = 'none'; 
+    document.getElementById('errorNotExist').style.display = 'none'; 
     fxml.send();
 }
 
-/* Liav functions for Issues Board */
+function logoutClickHandler(event) {
+    var fxml = new FXMLHttpRequest();
+        fxml.open(
+        'POST',
+        'issuesList.com/Logout',
+        {},
+        function(response) {
+            console.log(response)
+            if (response.status === 200){       
+                current_user = {email: "",username: "", password: "", id : ""};
+                document.getElementById('issues').style.display = 'none'; 
+                document.getElementById('logout').style.display = 'none'; 
+                document.querySelector('.form').style.display = 'block'; 
+                swap_login_form();
+            }
+            else{
+                console.log('Error while trying to logout !');
+            }
+        });
+        fxml.send();
+}
+
+//#endregion Login/Signin
+
+//#region IssuesBoard
 
 function loadIssuesBoard() {
     document.querySelector('.form').style.display = 'none'; 
     document.getElementById('issues').style.display = 'flex'; 
     document.getElementById('logout').style.display = 'block'; 
 
-    // Initialized click event to '+' button for adding new issues to the board.
     document.querySelectorAll('.add-issue-btn').forEach(function(btn) {
         btn.addEventListener('click', handleAddIssueClick);
     });
 
-    // Intialized click event to 'logout' button
     document.getElementById("logout-btn").addEventListener("click", logoutClickHandler);
 
-    // Load issues the storage in the server
     var fxml = new FXMLHttpRequest();
     fxml.open(
      'GET',
@@ -193,9 +219,7 @@ function loadIssuesBoard() {
         if (response.status === 200){
             var issueMap = response.issues;
 
-            // Clean the board by removing all issues from each column
             document.querySelectorAll('.column').forEach(column => {
-                // Remove all issue containers
                 const issueContainers = column.querySelectorAll('.issue-container');
                 issueContainers.forEach(issueContainer => {
                     column.removeChild(issueContainer);
@@ -205,39 +229,31 @@ function loadIssuesBoard() {
             if (issueMap instanceof Map) {
                 console.log('Client successefuly get issues');
 
-                // Iterate over the Map entries
                 issueMap.forEach(issue => {
-                    // Create a new container div for the issue
                     const issueContainer = document.createElement('div');
                     issueContainer.classList.add('issue-container');
 
-                    // Create a new div for the issue
                     const issueDiv = document.createElement('div');
                     issueDiv.classList.add('issue');
                     issueDiv.draggable = true;
                     issueDiv.dataset.issueId = issue.id;
                     issueDiv.textContent = "#" + issue.id + " " + issue.title + " (" + issue.assignee + ")";
 
-                    // Add event listener for clicking on the issue
                     issueDiv.addEventListener('click', issueClickHandler);
                     issueDiv.addEventListener('dragstart', function(event) {
                         event.dataTransfer.setData("text", event.target.dataset.issueId);
                     });
 
-                    // Create a trash mark
                     const trashMark = document.createElement('div');
                     trashMark.classList.add('trash-mark');
-                    trashMark.innerHTML = '&#128465;'; // Unicode for trash can emoji
+                    trashMark.innerHTML = '&#128465;'; // trash can emoji
                     trashMark.addEventListener('click', function(event) {
-                        // Call the removeIssue function when the trash mark is clicked
                         removeIssue(event);
                     });
 
-                    // Append the issue div and trash mark to the issue container
                     issueContainer.appendChild(issueDiv);
                     issueContainer.appendChild(trashMark);
 
-                    // Find the appropriate column based on the issue label
                     let columnClass;
                     switch (issue.label) {
                         case 'Todo':
@@ -256,14 +272,12 @@ function loadIssuesBoard() {
                             columnClass = '.done';
                             break;
                         default:
-                            columnClass = '.todo'; // Default to Todo if label doesn't match any column
+                            columnClass = '.todo';
                     }
 
-                    // Append the issue div to the appropriate column
                     document.querySelector(columnClass).appendChild(issueContainer);
                 });
 
-                // Add event listeners for drag-and-drop
                 var columns = document.querySelectorAll('.column');
                 columns.forEach(function(column) {
                     column.addEventListener('dragover', allowDrop);
@@ -284,17 +298,15 @@ function loadIssuesBoard() {
 function closeSlidingWindow() {
     var slidingWindow = document.getElementById("sliding-window");
     if (slidingWindow) {
-        slidingWindow.style.transition = "width 0.5s ease"; // Add transition for smooth slide effect
-        slidingWindow.style.transform = "translateX(100%)"; // Slide out to the right
+        slidingWindow.style.transition = "width 0.5s ease";
+        slidingWindow.style.transform = "translateX(100%)";
         setTimeout(function() {
-            slidingWindow.style.width = "0"; // Set width to 0 to hide the sliding window
-        }, 500); // Wait for the animation to complete before hiding
+            slidingWindow.style.width = "0"; 
+        }, 500);
     }
 }
 
 function showIssueDetails(issueId) {
-    // Fetch issue details from the server using issueId and display them
-    // For now, let's assume we have some dummy data
     var fxml = new FXMLHttpRequest();
     fxml.open(
      'GET',
@@ -313,7 +325,6 @@ function showIssueDetails(issueId) {
                 label: issue.label
             };
 
-            // Set the content of the sliding window
             var slidingWindowContent = `
                 <div class="sliding-window-content">
                     <span class="close-btn">&times;</span>
@@ -326,7 +337,6 @@ function showIssueDetails(issueId) {
                 </div>
             `;
 
-            // Create the sliding window if it doesn't exist
             var slidingWindow = document.getElementById("sliding-window");
             if (!slidingWindow) {
                 slidingWindow = document.createElement("div");
@@ -335,18 +345,15 @@ function showIssueDetails(issueId) {
                 document.body.appendChild(slidingWindow);
             }
 
-            // Set the content in the sliding window
             slidingWindow.innerHTML = slidingWindowContent;
 
-            // Display the sliding window with slide effect
-            slidingWindow.style.width = "20%"; // Set the width to 20% of the page
-            slidingWindow.style.display = "block"; // Set the display to "block" to show the sliding window
+            slidingWindow.style.width = "20%"; 
+            slidingWindow.style.display = "block"; 
             setTimeout(function() {
-                slidingWindow.style.transition = "width 0.5s ease"; // Add transition for smooth slide effect
-                slidingWindow.style.transform = "translateX(0)"; // Slide in from the right
+                slidingWindow.style.transition = "width 0.5s ease"; 
+                slidingWindow.style.transform = "translateX(0)";
             }, 100);
 
-            // Add event listener to the close button
             document.querySelector(".close-btn").addEventListener("click", closeSlidingWindow);
         }
         else{
@@ -357,10 +364,8 @@ function showIssueDetails(issueId) {
 }
 
 function issueClickHandler(event) {
-    // Get the issue ID associated with the clicked issue
     var issueId = event.target.dataset.issueId;
     
-    // Show issue details in the sliding window
     showIssueDetails(issueId);
 }
 
@@ -400,7 +405,6 @@ function handleAddIssueClick(event) {
     var boardId = event.target.dataset.boardId;
     var issueLabel = "";
 
-    //Get specific board label
     switch (boardId) {
         case "0":
             issueLabel = "Todo";
@@ -421,7 +425,6 @@ function handleAddIssueClick(event) {
             console.log("Invalid board ID");
     }
 
-    // Get users list to the select box
     var fxml = new FXMLHttpRequest();
     fxml.open(
         'GET',
@@ -433,20 +436,17 @@ function handleAddIssueClick(event) {
                 var users = response.users;
                 const selectElement = document.getElementById('assignee');
 
-                // Clear existing options from the select box
                 selectElement.innerHTML = '';
 
-                // Track existing usernames to prevent duplicates
                 var existingUsernames = {};
 
                 users.forEach(username => {
-                    // Check if username already exists in the select box
                     if (!existingUsernames[username]) {
                         const option = document.createElement('option');
                         option.value = username;
                         option.textContent = username;
                         selectElement.appendChild(option);
-                        existingUsernames[username] = true; // Mark the username as existing
+                        existingUsernames[username] = true;
                     }
                 });
             }
@@ -454,12 +454,10 @@ function handleAddIssueClick(event) {
     fxml.send();
 
 
-    // Toggle visibility of the new issue form
     var newIssueForm = document.getElementById('new-issue');
     newIssueForm.style.visibility = 'visible';
     newIssueForm.style.opacity = '1';
     
-    // Add click event listener to close the form
     var closeButton = document.getElementById('close-issue-form');
     closeButton.addEventListener('click', function() {
         var newIssueForm = document.getElementById('new-issue');
@@ -467,22 +465,18 @@ function handleAddIssueClick(event) {
         newIssueForm.style.opacity = '0';
     });
 
-    // handle submit button
     var submitButton = document.querySelector('#new-issue-form-inner input[type="submit"]');
     var errorMessage = document.getElementById('new-issue-error-message');
     errorMessage.style.display = 'none'; 
 
     submitButton.addEventListener('click', function(event) {
-        // Prevent form submission
         event.preventDefault();
     
-        // Validate form fields (example validation)
         var issueTitle = document.getElementById('issue-title').value.trim();
         var issueDueDate = document.getElementById('due-date').value.trim();
         var userAssignee = document.getElementById('assignee').value.trim();
         var issueDescription = document.getElementById('description').value.trim();
     
-        // Check if any field is empty
         if (issueTitle === '' || issueDueDate === '' || userAssignee === '' || issueDescription === '') {
             errorMessage.textContent = 'All fields are required!';
             errorMessage.style.display = 'block'; 
@@ -505,7 +499,6 @@ function handleAddIssueClick(event) {
             );
             fxml.send();
 
-            // close and reset form
             var newIssueForm = document.getElementById('new-issue');
             newIssueForm.style.visibility = 'hidden';
             newIssueForm.style.opacity = '0';
@@ -543,26 +536,6 @@ function removeIssue(event) {
     }
 }
 
-function logoutClickHandler(event) {
-    var fxml = new FXMLHttpRequest();
-        fxml.open(
-        'POST',
-        'issuesList.com/Logout',
-        {},
-        function(response) {
-            console.log(response)
-            if (response.status === 200){       
-                current_user = {email: "",username: "", password: "", id : ""};
-                document.getElementById('issues').style.display = 'none'; 
-                document.getElementById('logout').style.display = 'none'; 
-                document.querySelector('.form').style.display = 'block'; 
-                swap_login_form();
-            }
-            else{
-                console.log('Error while trying to logout !');
-            }
-        });
-        fxml.send();
-}
 
+//#endregion IssuesBoard
 onLoading();

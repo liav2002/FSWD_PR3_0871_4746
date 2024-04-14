@@ -5,6 +5,7 @@ export class Database {
     static loggedInUserID = undefined;
     static usersLoaded = false; 
     static issuesLoaded = false;
+    static issueIDCounter = Database.load('issueIDCounter') || 1;
 
     static save(key, value) {
         try {
@@ -115,6 +116,9 @@ export class Database {
                 Database.issues.set(key, issues[key]);
             });
         }
+        if (!Database.issueIDCounter && Database.issueIDCounter !== 0) { 
+            Database.issueIDCounter = Database.load('issueIDCounter') || 1;
+        }
 
         return 1;
     }
@@ -166,10 +170,11 @@ export class Database {
     static add_issue(issue) {
         try {
             Database.initialize_issues();
-            const issueId = String(Database.issues.size);
-            issue.id = parseInt(issueId);
-            Database.issues.set(issueId, issue.json());
+            const issueId = Database.issueIDCounter++; 
+            issue.id = issue.id = issueId;
+            Database.issues.set(String(issueId), issue);
             Database.save('issues', Object.fromEntries(Database.issues));
+            Database.save('issueIDCounter', Database.issueIDCounter);
             Database.issuesLoaded = false;
             return 1;
         } catch (error) {

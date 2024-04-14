@@ -1,4 +1,3 @@
-import { FXMLHttpRequest } from "./FXMLHttpRequest.js";
 import { Database } from "./DB.js";
 import { User } from "./user.js";
 import { Issue} from "./issue.js";
@@ -135,6 +134,7 @@ export class Server{
                     user = new User(body.username, body.password, body.fname, body.lname);
                     Database.add_user(user);
                     user = Database.get_user(body.username, body.password);
+                    Database.setLoggedInUser(user);
                     console.log(user);
                     callback({ status: 200, user: { email: user.email, username: user.username, password: user.password, id: user.id} });
                 }
