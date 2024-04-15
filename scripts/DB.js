@@ -5,6 +5,7 @@ export class Database {
     static loggedInUserID = undefined;
     static usersLoaded = false; 
     static issuesLoaded = false;
+    static issueIDCounter = Database.load('issueIDCounter');
 
     static save(key, value) {
         try {
@@ -17,10 +18,13 @@ export class Database {
     static load(key) {
         try {
             const value = localStorage.getItem(key);
+            if (key === 'issueIDCounter') {
+                return parseInt(value, 10) || 0;  
+            }
             return value ? JSON.parse(value) : {};
         } catch (error) {
             console.error("Error loading from localStorage:", error);
-            return {};
+            return undefined;
         }
     }
 
@@ -98,6 +102,9 @@ export class Database {
         if (Database.loggedInUserID === undefined) {
             return -1
         }
+        if (typeof Database.issueIDCounter !== 'number') {
+            Database.issueIDCounter = Database.load('issueIDCounter') || 0;
+        }
 
         if(!Database.usersLoaded) {
             this.initialize_users();
@@ -116,6 +123,7 @@ export class Database {
             });
         }
 
+
         return 1;
     }
 
@@ -130,12 +138,10 @@ export class Database {
         const filteredIssues = new Map();
 
         if (user.admin === 1) {
-            // Return all issues if user is admin
             Database.issues.forEach((value, key) => {
                 filteredIssues.set(key, value);
             });
         } else {
-            // Return only the issues that belong to the user
             Database.issues.forEach((issue, key) => {
                 if (issue.assignee === user.username) {
                     filteredIssues.set(key, issue);
@@ -166,10 +172,13 @@ export class Database {
     static add_issue(issue) {
         try {
             Database.initialize_issues();
-            const issueId = String(Database.issues.size);
-            issue.id = parseInt(issueId);
-            Database.issues.set(issueId, issue.json());
+            const issueId = Database.issueIDCounter++; 
+            Database.save('issueIDCounter', Database.issueIDCounter);
+            console.log("id counter: "+issueId)
+            issue.id = issueId;
+            Database.issues.set(String(issueId), issue);
             Database.save('issues', Object.fromEntries(Database.issues));
+            Database.save('issueIDCounter', Database.issueIDCounter);
             Database.issuesLoaded = false;
             return 1;
         } catch (error) {
@@ -186,13 +195,13 @@ export class Database {
                     Database.issues.delete(id);
                     Database.save('issues', Object.fromEntries(Database.issues));
                     Database.issuesLoaded = false;
-                    return 1; // Issue removed successfully
+                    return 1;
                 }
             }
-            return 0; // Issue not found
+            return 0;
         } catch (error) {
             console.error("Error removing issue:", error);
-            return -1; // Error occurred while removing issue
+            return -1;
         }
     }
 
