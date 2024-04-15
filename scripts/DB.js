@@ -103,9 +103,7 @@ export class Database {
             return -1
         }
         if (typeof Database.issueIDCounter !== 'number') {
-            console.log("issueIDCounter initialized");
             Database.issueIDCounter = Database.load('issueIDCounter') || 0;
-            console.log("issueIDcounter: "+this.issueIDCounter);
         }
 
         if(!Database.usersLoaded) {

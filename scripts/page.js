@@ -8,6 +8,7 @@ document.getElementById('login-page-button').addEventListener('click', swap_logi
 document.getElementById('signin-button').addEventListener('click', sign_up);
 
 var current_user = {email: "",username: "", password: "", id : ""}
+var issueLabel = "";
 //#region Login/Signin
 function onLoading() {
     document.getElementById('issues').style.display = 'none'; 
@@ -401,9 +402,10 @@ function drop(event) {
     }
 }
 
+
 function handleAddIssueClick(event) {
     var boardId = event.target.dataset.boardId;
-    var issueLabel = "";
+    
 
     switch (boardId) {
         case "0":
@@ -424,7 +426,6 @@ function handleAddIssueClick(event) {
         default:
             console.log("Invalid board ID");
     }
-    console.log('issueLabel:'+issueLabel);
     var fxml = new FXMLHttpRequest();
     fxml.open(
         'GET',
@@ -451,9 +452,9 @@ function handleAddIssueClick(event) {
                 });
             }
         });
+        
     fxml.send();
-
-
+    
     var newIssueForm = document.getElementById('new-issue');
     newIssueForm.style.visibility = 'visible';
     newIssueForm.style.opacity = '1';
@@ -469,9 +470,9 @@ function handleAddIssueClick(event) {
     var errorMessage = document.getElementById('new-issue-error-message');
     errorMessage.style.display = 'none'; 
 
+
     submitButton.addEventListener('click', function(event) {
         event.preventDefault();
-    
         var issueTitle = document.getElementById('issue-title').value.trim();
         var issueDueDate = document.getElementById('due-date').value.trim();
         var userAssignee = document.getElementById('assignee').value.trim();
@@ -506,6 +507,7 @@ function handleAddIssueClick(event) {
             document.getElementById('due-date').value = '';
             document.getElementById('assignee').value = '';
             document.getElementById('description').value = '';
+            issueLabel=null;
         }
     });
 }
