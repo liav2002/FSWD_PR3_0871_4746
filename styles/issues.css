@@ -4,7 +4,7 @@
 
 .issues_list {
     display: none;
-    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-x: auto; /* horizontal scrolling */
 }
 
 .board {
@@ -13,24 +13,24 @@
 }
 
 .column {
-    background-color: #f0f0f0; /* Light gray background */
+    background-color: #f0f0f0; 
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 15px;
-    width: 250px; /* Fixed width */
-    height: 400px; /* Fixed height */
-    margin-right: 20px; /* Add some margin between columns */
-    position: relative; /* Needed for absolute positioning of label */
+    width: 250px; 
+    height: 400px; 
+    margin-right: 20px; 
+    position: relative; 
 }
 
 .column h2 {
     position: absolute;
     top: -15px;
     left: 0;
-    width: auto; /* Adjust width to content */
+    width: auto;
     padding: 5px 10px;
     text-align: center;
-    border-radius: 20px; /* Bubble shape */
+    border-radius: 20px; 
     font-size: 16px;
     color: white;
 }
@@ -101,17 +101,15 @@
     cursor: pointer; 
 }
 
-/* Colors for different labels */
+
 .todo h2 {
-    /* Existing styles */
     border-top: 3px solid #1f7ad6;
     color: #1f7ad6;
-    border-top-left-radius: 10px; /* Adjust border-radius to fit the ellipse shape */
+    border-top-left-radius: 10px; 
     border-top-right-radius: 10px;
 }
 
 .in_process h2 {
-    /* Existing styles */
     border-top: 3px solid #6f42c1;
     color: #6f42c1;
     border-top-left-radius: 10px;
@@ -119,7 +117,6 @@
 }
 
 .review h2 {
-    /* Existing styles */
     border-top: 3px solid #fbc02d;
     color: #fbc02d;
     border-top-left-radius: 10px;
@@ -127,7 +124,6 @@
 }
 
 .bug h2 {
-    /* Existing styles */
     border-top: 3px solid #d32f2f;
     color: #d32f2f;
     border-top-left-radius: 10px;
@@ -135,16 +131,11 @@
 }
 
 .done h2 {
-    /* Existing styles */
     border-top: 3px solid #388e3c;
     color: #388e3c;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
-
-/*
-Sliding Window
-*/
 
 .sliding-window {
     position: fixed;
@@ -155,14 +146,14 @@ Sliding Window
     background-color: #f4f4f4;
     overflow-x: hidden;
     transition: width 0.5s ease; ;
-    z-index: 1000; /* Ensure it appears above other content */
+    z-index: 1000; 
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow effect */
-    transform: translateX(100%); /* Slide out to the right */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    transform: translateX(100%);
 }
 
 .sliding-window-content {
-    padding-top: 30px; /* Add space for close button */
+    padding-top: 30px;
 }
 
 .close-btn {
@@ -181,10 +172,6 @@ Sliding Window
 .dragging {
     opacity: 0.5;
 }
-
-/*
-New Issue Form
-*/
 
 .new-issue-form {
     position: fixed;

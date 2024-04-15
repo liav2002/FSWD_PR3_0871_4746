@@ -424,7 +424,7 @@ function handleAddIssueClick(event) {
         default:
             console.log("Invalid board ID");
     }
-
+    console.log('issueLabel:'+issueLabel);
     var fxml = new FXMLHttpRequest();
     fxml.open(
         'GET',

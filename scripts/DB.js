@@ -134,12 +134,10 @@ export class Database {
         const filteredIssues = new Map();
 
         if (user.admin === 1) {
-            // Return all issues if user is admin
             Database.issues.forEach((value, key) => {
                 filteredIssues.set(key, value);
             });
         } else {
-            // Return only the issues that belong to the user
             Database.issues.forEach((issue, key) => {
                 if (issue.assignee === user.username) {
                     filteredIssues.set(key, issue);
@@ -191,13 +189,13 @@ export class Database {
                     Database.issues.delete(id);
                     Database.save('issues', Object.fromEntries(Database.issues));
                     Database.issuesLoaded = false;
-                    return 1; // Issue removed successfully
+                    return 1;
                 }
             }
-            return 0; // Issue not found
+            return 0;
         } catch (error) {
             console.error("Error removing issue:", error);
-            return -1; // Error occurred while removing issue
+            return -1;
         }
     }
 
