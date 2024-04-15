@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Issues list</title>
+    <link rel="stylesheet" href="styles/index.css" type="text/css">
+    <link rel="stylesheet" href="styles/issues.css" type="text/css">
+    <link rel="icon" href="./static/icons/icon.png">
+</head>
+
+<body>
+    <div class="form">
+        <div class="displayed-block" id="login">
+
+            <p class="username">
+                <label for="loginUserName" class="username-label">Username</label>
+                <input type="text" class="input-text" name="user-name" id="loginUserName" value="" size="20"
+                    maxlength="50">
+            </p>
+
+            <div class="password-container">
+                <label for="login-password" class="password-label">Password</label>
+                <div class="show-password">
+                    <input id="showPassLog" type="checkbox" name="show_password" value="0">
+                    <label for="show">Show Password</label>
+                </div>
+            </div>
+            <input type="password" id="login-password" class="input-text" name="pass-word" size="20" maxlength="50">
+            <label for="errorMessage" id="errorNotExist">No user exists with this combination of username and password.</label>
+            <input type="submit" id="login-button" class="input-button" value="Login">
+            <input type="button" id="register-page-button" class="input-button" value="Sign Up">
+        </div>
+        <div class="hidden-block" id="signin">
+
+            <p class="email">
+                <label for="EmailText" class="email-label">Email</label>
+                <input type="text" class="input-text" name="email-text" id="email-box" value="" size="20"
+                    maxlength="50">
+            </p>
+
+            <p class="username">
+                <label for="signinUserName" class="username-label">Username</label>
+                <input type="text" class="input-text" name="user-name" id="signinUserName" value="" size="20"
+                    maxlength="50">
+            </p>
+
+            <div class="password-container">
+                <label for="signin-password" class="password-label">Password</label>
+                <div class="show-password">
+                    <input id="showPassSign" type="checkbox" name="show_password" value="0">
+                    <label for="show">Show Password</label>
+                </div>
+            </div>
+            <input type="password" id="signin-password" class="input-text" name="pass-word" size="20" maxlength="50">
+            <label for="errorMessage" id="errorAlready">User already exists!</label>
+            <input type="submit" id="signin-button" class="input-button" value="Create account">
+            <input type="button" id="login-page-button" class="input-button" value="Login">
+        </div>
+    </div>
+
+    <div class="issues_list" id="issues">
+        <div class="board">
+            <div class="column todo">
+                <h2>Todo</h2>
+                <div class="add-issue-btn" data-board-id="0">+</div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 1</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 2</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+            </div>
+            <div class="column in_process">
+                <h2>In Process</h2>
+                <div class="add-issue-btn" data-board-id="1">+</div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 3</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 4</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+            </div>
+            <div class="column review">
+                <h2>Review</h2>
+                <div class="add-issue-btn" data-board-id="2">+</div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 5</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 6</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+            </div>
+            <div class="column bug">
+                <h2>Bug</h2>
+                <div class="add-issue-btn" data-board-id="3">+</div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 7</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 8</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+            </div>
+            <div class="column done">
+                <h2>Done</h2>
+                <div class="add-issue-btn" data-board-id="4">+</div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 9</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+                <div class="issue-container">
+                    <div class="issue" draggable="true" data-issue-id="1">Issue 10</div>
+                    <div class="trash-mark">Trash</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="logout-container" id="logout">
+        <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+
+    <div id="sliding-window" class="sliding-window">
+    </div>
+
+    <div class="new-issue-form" id="new-issue">
+        <button id="close-issue-form" class="close-btn">&times;</button>
+        <h2>Create New Issue</h2>
+        <form id="new-issue-form-inner">
+            <label for="issue-title">Title:</label>
+            <input type="text" id="issue-title" name="issue-title" required><br>
+    
+            <label for="due-date">Due Date:</label>
+            <input type="date" id="due-date" name="due-date" required><br>
+    
+            <label for="assignee">Assignee:</label>
+            <select id="assignee" name="assignee" required>
+            </select><br>
+    
+            <label for="description">Description:</label><br>
+            <textarea id="description" name="description" rows="4" cols="50" required></textarea><br>
+    
+            <input type="submit" value="Submit">
+            <div id="new-issue-error-message" class="new-issue-error-message"></div>
+        </form>
+    </div>
+
+    <script src="./scripts/page.js" type="module"></script>
+</body>
+
+</html>
