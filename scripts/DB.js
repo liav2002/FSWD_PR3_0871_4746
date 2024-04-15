@@ -80,7 +80,7 @@ export class Database {
             localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
             Database.loggedInUserID = loggedInUser.id;
         } catch (error) {
-            console.error("Error saving loggedInUser to localStorage:", error);
+            console.log("Error saving loggedInUser to localStorage:", error);
         }
     }
 
