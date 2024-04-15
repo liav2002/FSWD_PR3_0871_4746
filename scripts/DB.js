@@ -5,7 +5,7 @@ export class Database {
     static loggedInUserID = undefined;
     static usersLoaded = false; 
     static issuesLoaded = false;
-    static issueIDCounter = Database.load('issueIDCounter') || 1;
+    static issueIDCounter = Database.load('issueIDCounter');
 
     static save(key, value) {
         try {
@@ -18,10 +18,13 @@ export class Database {
     static load(key) {
         try {
             const value = localStorage.getItem(key);
+            if (key === 'issueIDCounter') {
+                return parseInt(value, 10) || 0;  
+            }
             return value ? JSON.parse(value) : {};
         } catch (error) {
             console.error("Error loading from localStorage:", error);
-            return {};
+            return undefined;
         }
     }
 
@@ -99,6 +102,11 @@ export class Database {
         if (Database.loggedInUserID === undefined) {
             return -1
         }
+        if (typeof Database.issueIDCounter !== 'number') {
+            console.log("issueIDCounter initialized");
+            Database.issueIDCounter = Database.load('issueIDCounter') || 0;
+            console.log("issueIDcounter: "+this.issueIDCounter);
+        }
 
         if(!Database.usersLoaded) {
             this.initialize_users();
@@ -116,9 +124,7 @@ export class Database {
                 Database.issues.set(key, issues[key]);
             });
         }
-        if (!Database.issueIDCounter && Database.issueIDCounter !== 0) { 
-            Database.issueIDCounter = Database.load('issueIDCounter') || 1;
-        }
+
 
         return 1;
     }
@@ -169,7 +175,9 @@ export class Database {
         try {
             Database.initialize_issues();
             const issueId = Database.issueIDCounter++; 
-            issue.id = issue.id = issueId;
+            Database.save('issueIDCounter', Database.issueIDCounter);
+            console.log("id counter: "+issueId)
+            issue.id = issueId;
             Database.issues.set(String(issueId), issue);
             Database.save('issues', Object.fromEntries(Database.issues));
             Database.save('issueIDCounter', Database.issueIDCounter);
